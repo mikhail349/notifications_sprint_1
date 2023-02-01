@@ -1,15 +1,16 @@
 ```mermaid
 ---
-title: Архитектура сервиса нотификации
+title: Воркер
 ---
 flowchart
     service(UGC, Auth и др. сервисы)
     admin(Админ-панель)
     generator(Генератор\nавтоматических\nсобытий)
-    api(API-фасад)
+    api(API-фасад\nсервиса\nнотификации)
     mq[(RabbitMQ)]
     worker(Воркер)
     db[(База данных\nуведомлений)]
+    db_html[(База данных\nшаблонов)]
     client(Клиент)
     
     generator -->|событие| api
@@ -19,6 +20,7 @@ flowchart
     api -->|событие в очередь| mq
     mq -->|события из очереди| worker
     service -->|доп. данные\nдля рассылки| worker
+    db_html -->|html-шаблон| worker
     worker -->|добавить уведомление| db
     worker -->|email| client
 ```
@@ -30,7 +32,7 @@ title: Генератор автоматических событий
 flowchart
     service(UGC, Auth и др. сервисы)
     generator(Генератор\nавтоматических\nсобытий)
-    api(API-фасад)
+    api(API-фасад\nсервиса\nнотификации)
     db[(База данных\nуведомлений)]
     q{Данные\nизменились?}
     
@@ -38,6 +40,18 @@ flowchart
     service -->|актуальные данные|generator
     db -->|история уведомлений| generator
     q -->|да| api
-    q -->|нет| generator
-     
+    q -->|нет| generator   
+```
+
+```mermaid
+---
+title: Админ-панель
+---
+flowchart
+    admin(Админ-панель)
+    api(API-фасад\nсервиса\nнотификации)
+    db[(База данных\nhtml-шаблонов)]
+    
+    admin <-->|crud операции| db
+    admin -->|событие с ИД шаблона| api
 ```
