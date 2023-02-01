@@ -1,0 +1,65 @@
+name: Notifications CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 wemake-python-styleguide flake8-html mypy lxml pytest pytest-html
+      - name: Create reports folder
+        run: |
+          mkdir reports
+      - name: Lint with flake8
+        continue-on-error: true
+        id: flake
+        run: |
+          flake8 . --format=html --htmldir=./reports/flake
+      - name: Analysing code with mypy
+        id: mypy
+        run: |
+          mypy . --html-report ./reports/mypy
+      - name: Run tests
+        id: pytest
+        run: |
+          pytest --html=./reports/pytest/report.html --self-contained-html
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3.1.0
+        if: ${{ always() }}
+        with:
+          name: reports
+          path: reports/
+    outputs:
+      flake_status: ${{ steps.flake.outcome }}
+      mypy_status: ${{ steps.mypy.outcome }}
+      pytest_status: ${{ steps.pytest.outcome }}
+  notification:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: [build]
+    steps:
+      - name: send message to telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ${{ github.repository }}
+            Pipeline for ${{ github.sha }} 
+            ${{ contains(join(needs.*.result, ','), 'success') && 'finished successfully' || 'failed on step' }}
+            ${{ needs.build.outputs.flake_status == 'failure' && 'flake' || ''}}${{ needs.build.outputs.mypy_status == 'failure' && 'mypy' || ''}}${{ contains(needs.build.outputs.pytest_status, 'failure')  && 'pytest' || ''}}
+            Details: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
