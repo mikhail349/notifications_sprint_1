@@ -1,15 +1,12 @@
 """Основной файл сервиса."""
 import uvicorn
 from fastapi import FastAPI
-from fastapi.routing import Mount
 
 from src.api.v1.router import router as router_v1
 from src.services import broker
 
-routes = [
-    Mount('/api/v1', router_v1),
-]
-app = FastAPI(routes=routes)
+app = FastAPI()
+app.mount('/api/v1', router_v1)
 
 
 @app.on_event('startup')
