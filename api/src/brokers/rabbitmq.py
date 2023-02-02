@@ -40,7 +40,7 @@ class RabbitMQ(Broker):
         """
         message = aio_pika.Message(
             body=payload.json().encode(),
-            delivery_mode=aio_pika.DeliveryMode.PERSISTENT
+            delivery_mode=aio_pika.DeliveryMode.PERSISTENT,
         )
         await self.exchange.publish(
             message=message,

@@ -26,9 +26,9 @@ async def connect() -> None:
     for routing_key in RoutingKey:
         await channel.declare_queue(
             name=routing_key.value,
-            durable=True
+            durable=True,
         )
- 
+
     broker = RabbitMQ(exchange=channel.default_exchange)
 
 
