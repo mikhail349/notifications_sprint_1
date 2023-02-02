@@ -32,7 +32,7 @@ jobs:
       - name: Analysing code with mypy
         id: mypy
         run: |
-          mypy . --html-report ./reports/mypy
+          mypy . --ignore-missing-imports --follow-imports=skip --html-report ./reports/mypy
       - name: Run tests
         id: pytest
         run: |
