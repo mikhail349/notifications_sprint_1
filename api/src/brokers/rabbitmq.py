@@ -18,21 +18,18 @@ class RabbitMQ(Broker):
     """Класс RabbitMQ.
 
     Args:
-        conn: соеднинение RabbitMQ
+        exchange: точка обмена `AbstractExchange`
 
     """
 
-    def __init__(self, conn: aio_pika.RobustConnection) -> None:
+    def __init__(self, exchange: aio_pika.abc.AbstractExchange) -> None:
         """Инициализировать класс RabbitMQ.
 
         Args:
-            conn: соеднинение RabbitMQ
+            exchange: точка обмена `AbstractExchange`
 
         """
-        self.conn = conn
-
-    async def disconnect(self) -> None:  # noqa: D102
-        self.conn.close()
+        self.exchange = exchange
 
     async def post(self, routing_key: RoutingKey, payload: BaseModel) -> None:
         """Отправить сообщение.
@@ -41,11 +38,13 @@ class RabbitMQ(Broker):
             routing_key: перечисление `routing_key`
             payload: инстанс класса `BaseModel`
         """
-        channel = await self.conn.channel()
-        queue = await channel.declare_queue(routing_key.value)
-        await channel.default_exchange.publish(
-            message=aio_pika.Message(payload.json().encode()),
-            routing_key=queue.name,
+        message = aio_pika.Message(
+            body=payload.json().encode(),
+            delivery_mode=aio_pika.DeliveryMode.PERSISTENT
+        )
+        await self.exchange.publish(
+            message=message,
+            routing_key=routing_key.value,
         )
 
     async def post_review_rating(  # noqa: D102

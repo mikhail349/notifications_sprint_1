@@ -8,10 +8,6 @@ class Broker(ABC):
     """Абстрактный класс брокера."""
 
     @abstractmethod
-    async def disconnect(self) -> None:
-        """Разорвать соединение."""
-
-    @abstractmethod
     async def post_review_rating(self, review_rating: ReviewRating) -> None:
         """Отправить сообщение об оценке рецензии.
 
