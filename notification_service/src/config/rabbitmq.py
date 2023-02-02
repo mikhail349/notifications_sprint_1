@@ -3,8 +3,9 @@ from pydantic import Field, Required
 
 from src.config.base import BaseConfig
 
-
 DEFAULT_PORT = 5672
+"""Порт подключения по умолчанию."""
+
 
 class RabbitMQSettings(BaseConfig):
     """Настройки RabbitMQ."""

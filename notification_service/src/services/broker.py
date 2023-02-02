@@ -3,20 +3,20 @@ from typing import Union
 
 import aio_pika
 
-from src.config.rabbitmq import rabbitmq_settings
 from src.brokers.base import Broker
 from src.brokers.rabbitmq import RabbitMQ
+from src.config.rabbitmq import rabbitmq_settings
 
 broker: Union[Broker, None] = None
 
 
 async def connect() -> None:
     """Подключиться к брокеру."""
-    connection = await aio_pika.connect_robust(
-        f'amqp://{rabbitmq_settings.username}:{rabbitmq_settings.password}@'
-        f'{rabbitmq_settings.host}:{rabbitmq_settings.port}/',
+    url = 'amqp://{username}:{password}@{host}:{password}'.format(
+        **rabbitmq_settings.dict(),
     )
-    global broker
+    connection = await aio_pika.connect_robust(url)
+    global broker  # noqa: WPS420
     broker = RabbitMQ(conn=connection)
 
 

@@ -1,10 +1,10 @@
 """Модуль классов событий."""
-import uuid
 import datetime
+import uuid
 
 from pydantic import Field
 
-from src.models.base import BaseModel 
+from src.models.base import BaseModel
 
 
 class ReviewRating(BaseModel):
