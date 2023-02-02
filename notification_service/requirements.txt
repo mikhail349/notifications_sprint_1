@@ -3,3 +3,4 @@ uvicorn==0.12.2
 pydantic==1.9.0
 python-dotenv==0.21.0
 wemake-python-styleguide==0.17.0
+aio-pika==8.3.0
