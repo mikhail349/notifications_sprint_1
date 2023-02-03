@@ -5,8 +5,10 @@ import aio_pika
 import backoff
 
 from src.brokers.base import Broker
-from src.brokers.rabbitmq import RabbitMQ, RoutingKey
+from src.brokers.rabbitmq import RabbitMQ
 from src.config.rabbitmq import rabbitmq_settings
+from src.models.base import PriorityType
+from src.db.mock import MockDataBase
 
 broker: Union[Broker, None] = None
 connection: Union[aio_pika.abc.AbstractConnection, None] = None
@@ -23,13 +25,14 @@ async def connect() -> None:
 
     connection = await aio_pika.connect_robust(url)
     channel = await connection.channel()
-    for routing_key in RoutingKey:
+    for priority in PriorityType:
         await channel.declare_queue(
-            name=routing_key.value,
+            name=priority.value,
             durable=True,
         )
 
-    broker = RabbitMQ(exchange=channel.default_exchange)
+    db = MockDataBase()
+    broker = RabbitMQ(exchange=channel.default_exchange, db=db)
 
 
 async def disconnect() -> None:

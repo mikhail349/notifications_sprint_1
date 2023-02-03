@@ -4,30 +4,25 @@ import enum
 import aio_pika
 
 from src.brokers.base import Broker
-from src.models.base import Notification, EventType
+from src.models.base import Notification, EventType, PriorityType
+from src.db.base import DataBase
 
 
-class RoutingKey(str, enum.Enum):
-    """Перечисление ключей маршрутизации."""
 
-    LOW_PRIORITY = 'low_priority'  # noqa: WPS115
-    HIGH_PRIORITY = 'high_priority'  # noqa: WPS115
-
-
-def get_routing_key(event_type: EventType) -> RoutingKey:
-    """Получить ключ маршрутизации по типу события.
+# def get_priority(event_type: EventType) -> PriorityType:
+#     """Получить приоритет по типу события.
     
-    Args:
-        event_type: тип события
+#     Args:
+#         event_type: тип события
 
-    Returns:
-        `RoutingKey`: ключ маршрутизации
+#     Returns:
+#         `PriorityType`: приоритет
 
-    """
-    mapping = {
-        EventType.REVIEW_RATED: RoutingKey.HIGH_PRIORITY
-    }
-    return mapping.get(event_type, RoutingKey.LOW_PRIORITY)
+#     """
+#     mapping = {
+#         EventType.REVIEW_RATED: PriorityType.HIGH_PRIORITY
+#     }
+#     return mapping.get(event_type, PriorityType.LOW_PRIORITY)
 
 
 class RabbitMQ(Broker):
@@ -35,19 +30,26 @@ class RabbitMQ(Broker):
 
     Args:
         exchange: точка обмена `AbstractExchange`
+        db: база данных
 
     """
 
-    def __init__(self, exchange: aio_pika.abc.AbstractExchange) -> None:
+    def __init__(
+        self,
+        exchange: aio_pika.abc.AbstractExchange,
+        db: DataBase
+    ) -> None:
         """Инициализировать класс RabbitMQ.
 
         Args:
             exchange: точка обмена `AbstractExchange`
+            db: база данных
 
         """
         self.exchange = exchange
+        self.db = db
 
-    async def _post(self, routing_key: RoutingKey, payload: Notification) -> None:
+    async def _post(self, priority: PriorityType, payload: Notification) -> None:
         """Вспомогательный метод отправки уведомления.
 
         Args:
@@ -61,7 +63,7 @@ class RabbitMQ(Broker):
         )
         await self.exchange.publish(
             message=message,
-            routing_key=routing_key.value,
+            routing_key=priority.value,
         )
     
     async def post(self, notification: Notification) -> None:
@@ -71,5 +73,5 @@ class RabbitMQ(Broker):
             notification: инстанс уведомления `Notification`
 
         """
-        routing_key = get_routing_key(notification.event_type)
-        await self._post(routing_key=routing_key, payload=notification)
+        priority = await self.db.get_priority(notification.event_type)
+        await self._post(priority=priority, payload=notification)

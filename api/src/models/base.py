@@ -14,8 +14,8 @@ class EventType(str, enum.Enum):
     REVIEW_RATED = 'review-reporting.v1.rated'  # noqa: WPS115
 
 
-class QueueType(enum.Enum):
-    """Перечисление типов очередей."""
+class PriorityType(enum.Enum):
+    """Перечисление приоритетов."""
     LOW_PRIORITY = 'low_priority'  # noqa: WPS115
     HIGH_PRIORITY = 'high_priority'  # noqa: WPS115
 
