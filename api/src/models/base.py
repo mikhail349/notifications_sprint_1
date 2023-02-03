@@ -18,13 +18,6 @@ class EventType(enum.Enum):
     USER_REGISTERED = 'user-reporting.v1.registered'  # noqa: WPS115
 
 
-class PriorityType(enum.Enum):
-    """Перечисление приоритетов."""
-
-    LOW_PRIORITY = 'low_priority'  # noqa: WPS115
-    HIGH_PRIORITY = 'high_priority'  # noqa: WPS115
-
-
 class Notification(BaseModel):
     """Модель базового уведомления."""
 

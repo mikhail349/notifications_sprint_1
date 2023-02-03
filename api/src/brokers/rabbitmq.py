@@ -2,7 +2,7 @@
 import aio_pika
 
 from src.brokers.base import Broker
-from src.models.base import Notification, PriorityType
+from src.models.base import Notification
 from src.storages.base import NotificationStorage
 
 
@@ -46,13 +46,13 @@ class RabbitMQ(Broker):
 
     async def _post(
         self,
-        priority: PriorityType,
+        priority: str,
         payload: Notification,
     ) -> None:
         """Вспомогательный метод отправки уведомления.
 
         Args:
-            priority: приоритет `PriorityType`
+            priority: приоритет
             payload: инстанс класса `Event`
 
         """
@@ -62,5 +62,5 @@ class RabbitMQ(Broker):
         )
         await self.exchange.publish(
             message=message,
-            routing_key=priority.value,
+            routing_key=priority,
         )
