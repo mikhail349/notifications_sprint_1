@@ -12,7 +12,7 @@ async def main():
     logging.basicConfig(level=logging.INFO)
 
     async with await get_connection() as conn:
-        queue = await get_queue(conn, RoutingKey.REVIEW_RATING)
+        queue = await get_queue(conn, RoutingKey.LOW_PRIORITY)
         broker = RabbitMQ(queue)
         worker = Worker(broker)
         await worker.run()

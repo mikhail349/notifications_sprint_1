@@ -9,8 +9,8 @@ from src.brokers.base import Broker, MsgCallback
 
 class RoutingKey(enum.Enum):
     """Перечисление ключей маршрутизации."""
-
-    REVIEW_RATING = 'review-reporting.v1.rated'  # noqa: WPS115
+    LOW_PRIORITY = 'low_priority'  # noqa: WPS115
+    HIGH_PRIORITY = 'high_priority'  # noqa: WPS115
 
 
 class RabbitMQ(Broker):

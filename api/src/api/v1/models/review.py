@@ -4,13 +4,19 @@ import uuid
 
 from pydantic import Field
 
-from src.models.base import BaseModel
+from src.api.v1.models.base import BaseModel, Event
 
 
 class ReviewRating(BaseModel):
-    """Модель события оценки рецензии."""
+    """Модель оценки рецензии."""
 
     username: str
     review_id: uuid.UUID
     rating: int = Field(ge=0, le=10)
     updated_at: datetime.datetime
+
+
+class ReviewRatingEvent(Event):
+    """Модель события оценки рецензии."""
+
+    body: ReviewRating

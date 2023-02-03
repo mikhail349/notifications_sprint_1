@@ -1,17 +1,17 @@
 """Модуль с абстрактным брокером сообщений."""
 from abc import ABC, abstractmethod
 
-from src.models.review import ReviewRating
+from src.models.base import Notification
 
 
 class Broker(ABC):
     """Абстрактный класс брокера."""
 
     @abstractmethod
-    async def post_review_rating(self, review_rating: ReviewRating) -> None:
-        """Отправить сообщение об оценке рецензии.
+    async def post(self, notification: Notification) -> None:
+        """Отправить сообщение.
 
         Args:
-            review_rating: инстанс класса `ReviewRating`
+            notification: инстанс класса `Notification`
 
         """

@@ -35,6 +35,6 @@ class Worker(object):
 
     async def run(self) -> None:
         """Запустить воркер."""
-        logger.info("Waiting for messages. To exit press CTRL+C")
+        logger.info('Waiting for messages. To exit press CTRL+C')
         await self.broker.consume(self.on_message)
         await asyncio.Future()

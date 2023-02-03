@@ -4,14 +4,15 @@ import enum
 import aio_pika
 
 from src.brokers.base import Broker
-from src.models.base import BaseModel
-from src.models.review import ReviewRating
+# from src.models.base import BaseModel, Event, DeliveryType
+from src.models.base import Notification
+from src.api.v1.models.base import EventType
 
 
 class RoutingKey(enum.Enum):
     """Перечисление ключей маршрутизации."""
-
-    REVIEW_RATING = 'review-reporting.v1.rated'  # noqa: WPS115
+    LOW_PRIORITY = 'low_priority'  # noqa: WPS115
+    HIGH_PRIORITY = 'high_priority'  # noqa: WPS115
 
 
 class RabbitMQ(Broker):
@@ -31,12 +32,12 @@ class RabbitMQ(Broker):
         """
         self.exchange = exchange
 
-    async def post(self, routing_key: RoutingKey, payload: BaseModel) -> None:
+    async def _post(self, routing_key: RoutingKey, payload: Notification) -> None:
         """Отправить сообщение.
 
         Args:
             routing_key: перечисление `routing_key`
-            payload: инстанс класса `BaseModel`
+            payload: инстанс класса `Event`
         """
         message = aio_pika.Message(
             body=payload.json().encode(),
@@ -46,9 +47,23 @@ class RabbitMQ(Broker):
             message=message,
             routing_key=routing_key.value,
         )
+    
+    async def post(self, notification: Notification) -> None:
+        priority = {
+            EventType.REVIEW_RATED: RoutingKey.HIGH_PRIORITY
+        }
+        await self._post(
+            routing_key=priority.get(notification.event_type),
+            payload=notification
+        )
 
-    async def post_review_rating(  # noqa: D102
-        self,
-        review_rating: ReviewRating,
-    ) -> None:
-        await self.post(RoutingKey.REVIEW_RATING, review_rating)
+    # async def post_review_rating(  # noqa: D102
+    #     self,
+    #     review_rating: ReviewRating,
+    # ) -> None:
+    #     event = Event(
+    #         delivery_type=DeliveryType.EMAIL,
+
+    #         body=review_rating
+    #     )
+    #     await self.post(RoutingKey.HIGH_PRIORITY, review_rating)
