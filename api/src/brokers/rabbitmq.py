@@ -4,15 +4,30 @@ import enum
 import aio_pika
 
 from src.brokers.base import Broker
-# from src.models.base import BaseModel, Event, DeliveryType
-from src.models.base import Notification
-from src.api.v1.models.base import EventType
+from src.models.base import Notification, EventType
 
 
-class RoutingKey(enum.Enum):
+class RoutingKey(str, enum.Enum):
     """Перечисление ключей маршрутизации."""
+
     LOW_PRIORITY = 'low_priority'  # noqa: WPS115
     HIGH_PRIORITY = 'high_priority'  # noqa: WPS115
+
+
+def get_routing_key(event_type: EventType) -> RoutingKey:
+    """Получить ключ маршрутизации по типу события.
+    
+    Args:
+        event_type: тип события
+
+    Returns:
+        `RoutingKey`: ключ маршрутизации
+
+    """
+    mapping = {
+        EventType.REVIEW_RATED: RoutingKey.HIGH_PRIORITY
+    }
+    return mapping.get(event_type, RoutingKey.LOW_PRIORITY)
 
 
 class RabbitMQ(Broker):
@@ -33,11 +48,12 @@ class RabbitMQ(Broker):
         self.exchange = exchange
 
     async def _post(self, routing_key: RoutingKey, payload: Notification) -> None:
-        """Отправить сообщение.
+        """Вспомогательный метод отправки уведомления.
 
         Args:
-            routing_key: перечисление `routing_key`
+            routing_key: перечисление `RoutingKey`
             payload: инстанс класса `Event`
+
         """
         message = aio_pika.Message(
             body=payload.json().encode(),
@@ -49,21 +65,11 @@ class RabbitMQ(Broker):
         )
     
     async def post(self, notification: Notification) -> None:
-        priority = {
-            EventType.REVIEW_RATED: RoutingKey.HIGH_PRIORITY
-        }
-        await self._post(
-            routing_key=priority.get(notification.event_type),
-            payload=notification
-        )
+        """Отправить уведомление в очередь.
 
-    # async def post_review_rating(  # noqa: D102
-    #     self,
-    #     review_rating: ReviewRating,
-    # ) -> None:
-    #     event = Event(
-    #         delivery_type=DeliveryType.EMAIL,
+        Args:
+            notification: инстанс уведомления `Notification`
 
-    #         body=review_rating
-    #     )
-    #     await self.post(RoutingKey.HIGH_PRIORITY, review_rating)
+        """
+        routing_key = get_routing_key(notification.event_type)
+        await self._post(routing_key=routing_key, payload=notification)

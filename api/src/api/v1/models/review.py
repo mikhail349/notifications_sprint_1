@@ -2,9 +2,9 @@
 import datetime
 import uuid
 
-from pydantic import Field
+from pydantic import BaseModel, Field
 
-from src.api.v1.models.base import BaseModel, Event
+from src.api.v1.models.base import Event
 
 
 class ReviewRating(BaseModel):
