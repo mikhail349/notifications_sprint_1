@@ -6,10 +6,12 @@
 
 ## Запуск в режиме dev
 
-1. Запустить докер `docker compose -f docker-compose.dev.yml up -d`
-2. Запустить [API-сервис приема событий](api/README.md)
-3. Запустить [Обработчик событий из очереди](worker/README.md)
+1. Создать файл `.env` с переменными окружения по аналогии с файлом `.env.example`
+2. Запустить докер `docker compose -f docker-compose.dev.yml up -d`
+3. Запустить [API-сервис приема событий](api/README.md)
+4. Запустить [Обработчик событий из очереди](worker/README.md)
 
 ## Запуск в режиме prod
 
-1. Запустить докер `docker compose up -d --build`
+1. Создать файл `.env` с переменными окружения по аналогии с файлом `.env.example`
+2. Запустить докер `docker compose up -d --build`
