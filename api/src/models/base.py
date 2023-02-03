@@ -15,6 +15,7 @@ class EventType(enum.Enum):
     """Перечисление типов событий."""
 
     REVIEW_RATED = 'review-reporting.v1.rated'  # noqa: WPS115
+    USER_REGISTERED = 'user-reporting.v1.registered'  # noqa: WPS115
 
 
 class PriorityType(enum.Enum):

@@ -12,5 +12,6 @@ class MockedNotificationStorage(NotificationStorage):
     ) -> PriorityType:
         mapping = {
             EventType.REVIEW_RATED: PriorityType.HIGH_PRIORITY,
+            EventType.USER_REGISTERED: PriorityType.HIGH_PRIORITY,
         }
         return mapping.get(event_type, PriorityType.LOW_PRIORITY)
