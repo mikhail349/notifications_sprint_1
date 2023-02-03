@@ -9,8 +9,8 @@ from src.storages.base import NotificationStorage
 class PriorityType(enum.Enum):
     """Перечисление приоритетов."""
 
-    LOW_PRIORITY = 'low_priority'  # noqa: WPS115
-    HIGH_PRIORITY = 'high_priority'  # noqa: WPS115
+    LOW_PRIORITY = 'low_priority'
+    HIGH_PRIORITY = 'high_priority'
 
 
 class MockedNotificationStorage(NotificationStorage):

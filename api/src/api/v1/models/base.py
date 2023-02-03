@@ -7,8 +7,8 @@ from pydantic import BaseModel
 class DeliveryType(enum.Enum):
     """Перечисление способов доставки."""
 
-    EMAIL = 'email'  # noqa: WPS115
-    SMS = 'sms'  # noqa: WPS115
+    EMAIL = 'email'
+    SMS = 'sms'
 
 
 class Event(BaseModel):
