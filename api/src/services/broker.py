@@ -8,7 +8,7 @@ from src.brokers.base import Broker
 from src.brokers.rabbitmq import RabbitMQ
 from src.config.rabbitmq import rabbitmq_settings
 from src.models.base import PriorityType
-from src.db.mock import MockDataBase
+from src.storages.mock import MockedNotificationStorage
 
 broker: Union[Broker, None] = None
 connection: Union[aio_pika.abc.AbstractConnection, None] = None
@@ -31,8 +31,10 @@ async def connect() -> None:
             durable=True,
         )
 
-    db = MockDataBase()
-    broker = RabbitMQ(exchange=channel.default_exchange, db=db)
+    broker = RabbitMQ(
+        exchange=channel.default_exchange,
+        notification_storage=MockedNotificationStorage(),
+    )
 
 
 async def disconnect() -> None:

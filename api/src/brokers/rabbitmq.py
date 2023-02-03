@@ -1,28 +1,9 @@
 """Модуль RabbitMQ."""
-import enum
-
 import aio_pika
 
 from src.brokers.base import Broker
-from src.models.base import Notification, EventType, PriorityType
-from src.db.base import DataBase
-
-
-
-# def get_priority(event_type: EventType) -> PriorityType:
-#     """Получить приоритет по типу события.
-    
-#     Args:
-#         event_type: тип события
-
-#     Returns:
-#         `PriorityType`: приоритет
-
-#     """
-#     mapping = {
-#         EventType.REVIEW_RATED: PriorityType.HIGH_PRIORITY
-#     }
-#     return mapping.get(event_type, PriorityType.LOW_PRIORITY)
+from src.models.base import Notification, PriorityType
+from src.storages.base import NotificationStorage
 
 
 class RabbitMQ(Broker):
@@ -30,30 +11,48 @@ class RabbitMQ(Broker):
 
     Args:
         exchange: точка обмена `AbstractExchange`
-        db: база данных
+        notification_storage: хранилище уведомлений
 
     """
 
     def __init__(
         self,
         exchange: aio_pika.abc.AbstractExchange,
-        db: DataBase
+        notification_storage: NotificationStorage,
     ) -> None:
         """Инициализировать класс RabbitMQ.
 
         Args:
             exchange: точка обмена `AbstractExchange`
-            db: база данных
+            notification_storage: хранилище уведомлений
 
         """
         self.exchange = exchange
-        self.db = db
+        self.notification_storage = notification_storage
 
-    async def _post(self, priority: PriorityType, payload: Notification) -> None:
+    async def post(self, notification: Notification) -> None:
+        """Отправить уведомление в очередь.
+
+        Args:
+            notification: инстанс уведомления `Notification`
+
+        """
+        priority = (
+            await self.notification_storage.get_priority(
+                notification.event_type,
+            )
+        )
+        await self._post(priority=priority, payload=notification)
+
+    async def _post(
+        self,
+        priority: PriorityType,
+        payload: Notification,
+    ) -> None:
         """Вспомогательный метод отправки уведомления.
 
         Args:
-            routing_key: перечисление `RoutingKey`
+            priority: приоритет `PriorityType`
             payload: инстанс класса `Event`
 
         """
@@ -65,13 +64,3 @@ class RabbitMQ(Broker):
             message=message,
             routing_key=priority.value,
         )
-    
-    async def post(self, notification: Notification) -> None:
-        """Отправить уведомление в очередь.
-
-        Args:
-            notification: инстанс уведомления `Notification`
-
-        """
-        priority = await self.db.get_priority(notification.event_type)
-        await self._post(priority=priority, payload=notification)

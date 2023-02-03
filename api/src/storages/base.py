@@ -1,10 +1,11 @@
+"""Модуль абстрактных хранилищ."""
 from abc import ABC, abstractmethod
 
 from src.models.base import EventType, PriorityType
 
 
-class DataBase(ABC):
-    """Абстрактный класс базы данных."""
+class NotificationStorage(ABC):
+    """Абстрактный класс хранилища уведомлений."""
 
     @abstractmethod
     async def get_priority(self, event_type: EventType) -> PriorityType:
