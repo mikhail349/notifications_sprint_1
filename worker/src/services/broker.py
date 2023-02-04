@@ -2,7 +2,6 @@
 import aio_pika
 import backoff
 
-from src.brokers.rabbitmq import RoutingKey
 from src.config.rabbitmq import rabbitmq_settings
 
 
@@ -22,7 +21,7 @@ async def get_connection() -> aio_pika.abc.AbstractRobustConnection:
 
 async def get_queue(
     connection: aio_pika.abc.AbstractRobustConnection,
-    routing_key: RoutingKey,
+    routing_key: str,
 ) -> aio_pika.abc.AbstractQueue:
     """Получить очередь RabbitMQ.
 
@@ -36,6 +35,6 @@ async def get_queue(
     """
     channel = await connection.channel()
     return await channel.declare_queue(
-        name=routing_key.value,
+        name=routing_key,
         durable=True,
     )

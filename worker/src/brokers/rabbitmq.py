@@ -1,16 +1,9 @@
 """Модуль RabbitMQ."""
-import enum
 import json
 
 import aio_pika
 
 from src.brokers.base import Broker, MsgCallback
-
-
-class RoutingKey(enum.Enum):
-    """Перечисление ключей маршрутизации."""
-    LOW_PRIORITY = 'low_priority'  # noqa: WPS115
-    HIGH_PRIORITY = 'high_priority'  # noqa: WPS115
 
 
 class RabbitMQ(Broker):
