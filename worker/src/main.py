@@ -1,19 +1,15 @@
 """Основной файл запуска."""
 import asyncio
 import logging
-from typing import Dict
 
 from aio_pika.abc import AbstractRobustConnection
 
 from src.brokers.rabbitmq import RabbitMQ
-from src.models.notification import DeliveryType
-from src.senders.base import Sender
-from src.senders.email import EmailSender
+from src.senders.loader import setup_plugins
 from src.services.broker import get_connection, get_queue
 from src.storages.base import NotificationStorage
 from src.storages.mock import MockedNotificationStorage
 from src.worker import Worker
-from src.senders.loader import setup_plugins
 
 
 async def create_worker(
@@ -38,7 +34,7 @@ async def create_worker(
     return Worker(broker, storage=storage, name=worker_name)
 
 
-async def main():
+async def main():  # noqa: WPS217
     """Основная функция."""
     logging.basicConfig(level=logging.INFO)
 

@@ -4,7 +4,7 @@ import enum
 from pydantic import BaseModel
 
 
-class DeliveryType(enum.Enum):
+class DeliveryType(str, enum.Enum):  # noqa: WPS600
     """Перечисление способов доставки."""
 
     EMAIL = 'email'

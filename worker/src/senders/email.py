@@ -1,16 +1,18 @@
-"""Модуль классов доставщика email."""
-from src.senders.base import Sender
+"""Модуль классов отправителя email."""
+import logging
+
 from src.senders import factory
+from src.senders.base import Sender
+
 
 class EmailSender(Sender):
-    """Класс доставщик уведомлений по email."""
+    """Класс отправитель уведомлений по email."""
 
     async def send(self) -> None:
         """Отправить уведомление."""
-        import logging
-        logging.info("Email отправлен.")
+        logging.info('Email отправлен.')
 
 
 def initialize():
     """Зарегистрировать модуль в фабрике."""
-    factory.register("src.senders.email", EmailSender)
+    factory.register('src.senders.email', EmailSender)

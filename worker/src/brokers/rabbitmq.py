@@ -1,6 +1,4 @@
 """Модуль RabbitMQ."""
-import json
-
 import aio_pika
 
 from src.brokers.base import Broker, MsgCallback

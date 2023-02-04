@@ -1,22 +1,16 @@
 """Модуль обработчика событий."""
 import logging
-from typing import Optional, Dict
+from typing import Optional
 
 from src.brokers.base import Broker
-from src.models.notification import Notification, DeliveryType
-from src.senders.base import Sender
+from src.models.notification import DeliveryType, Notification
 from src.senders import factory
+from src.senders.base import Sender
 from src.storages.base import NotificationStorage
 
 
 class Worker(object):
-    """Класс обработчика событий.
-
-    Args:
-        broker: брокер сообщений `Broker`
-        name: название воркера
-
-    """
+    """Класс обработчика событий."""
 
     def __init__(
         self,
@@ -28,6 +22,7 @@ class Worker(object):
 
         Args:
             broker: брокер сообщений `Broker`
+            storage: хранилище уведомлений
             name: название воркера
 
         """
@@ -42,20 +37,35 @@ class Worker(object):
             msg: сообщение
 
         """
-        sender_class_str = await self.storage.get_sender_class(msg.delivery_type)
-        sender_class = factory.senders.get(sender_class_str)
+        self.logger.info('New message: {0}'.format(msg))
 
-        if sender_class is None:
+        sender = None
+        try:
+            sender = self.get_sender(msg.delivery_type)
+        except KeyError:
             self.logger.error(
                 'No sender found for delivery_type: {0}'.format(
-                    msg.delivery_type
-                )
+                    msg.delivery_type,
+                ),
             )
+        if sender is None:
             return
-        
-        sender = sender_class()
         await sender.send()
-        self.logger.info('New message: {0}'.format(msg))
+
+    async def get_sender(self, delivery_type: DeliveryType) -> Sender:
+        """Получить отправителя.
+
+        Args:
+            delivery_type: тип отправки
+
+        Returns:
+            Sender: отправитель.
+
+        """
+        sender_plugin = (
+            await self.storage.get_sender_plugin(delivery_type)
+        )
+        return factory.create(sender_plugin)
 
     async def run(self) -> None:
         """Запустить воркер."""
