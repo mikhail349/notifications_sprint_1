@@ -23,4 +23,4 @@ class Notification(BaseModel):
 
     delivery_type: DeliveryType
     event_type: EventType
-    body: BaseModel
+    body: dict

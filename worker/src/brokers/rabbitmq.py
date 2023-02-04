@@ -4,6 +4,7 @@ import json
 import aio_pika
 
 from src.brokers.base import Broker, MsgCallback
+from src.models.notification import Notification
 
 
 class RabbitMQ(Broker):
@@ -36,7 +37,9 @@ class RabbitMQ(Broker):
         """
         if self.msg_callback is None:
             return
-        await self.msg_callback(json.loads(message.body.decode()))
+
+        notification = Notification.parse_raw(message.body.decode())
+        await self.msg_callback(notification)
 
     async def consume(self, callback: MsgCallback) -> None:  # noqa: D102
         self.msg_callback = callback

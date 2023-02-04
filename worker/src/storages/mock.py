@@ -1,20 +1,21 @@
 """Модуль имитации хранилищ."""
-import enum
 from typing import List
 
-from src.models.notification import EventType
+from src.models.notification import DeliveryType
 from src.storages.base import NotificationStorage
-
-
-class QueueType(enum.Enum):
-    """Перечисление очередей."""
-
-    LOW_PRIORITY = 'low_priority'
-    HIGH_PRIORITY = 'high_priority'
 
 
 class MockedNotificationStorage(NotificationStorage):
     """Класс имитации хранилища уведомлений."""
 
     async def get_queues(self) -> List[str]:  # noqa: D102
-        return [queue.value for queue in QueueType]
+        return ['low_priority', 'high_priority']
+
+    async def get_sender_plugins(self) -> List[str]:
+        return ['src.senders.email']
+
+    async def get_sender_class(self, delivery_type: DeliveryType) -> str:
+        mapping = {
+            DeliveryType.EMAIL: 'src.senders.email',
+        }
+        return mapping.get(delivery_type, DeliveryType.EMAIL)
