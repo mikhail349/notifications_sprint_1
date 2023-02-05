@@ -84,22 +84,23 @@ class Worker(object):
         """
         self.logger.info('New message: {0}'.format(msg))
 
+        # data getting
         handler = self.get_handler(msg.event_type)
-        sender = self.get_sender(msg.delivery_type)
-
         data = await handler.get_data(msg.body)
 
+        # templating
         template = await self.templater.get_template(
             delivery_type=msg.delivery_type,
             event_type=msg.event_type
         )
-
         filled_template = self.templater.get_filled_template(
             template=template,
             data=data["payload"]
         )
         
-        await sender.send()
+        # sending
+        sender = self.get_sender(msg.delivery_type)
+        await sender.send(text=filled_template)
 
     async def run(self) -> None:
         """Запустить воркер."""

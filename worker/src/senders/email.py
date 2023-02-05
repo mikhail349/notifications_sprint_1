@@ -1,5 +1,6 @@
 """Модуль классов отправителя email."""
 import logging
+from typing import List
 
 from src.senders import factory
 from src.senders.base import Sender
@@ -8,9 +9,13 @@ from src.senders.base import Sender
 class EmailSender(Sender):
     """Класс отправитель уведомлений по email."""
 
-    async def send(self) -> None:
+    async def send(self, text: str) -> None:  # recipients: List[str], 
         """Отправить уведомление."""
-        logging.info('Email отправлен.')
+        msg = f"""
+            subject: None
+            text: {text}
+        """
+        logging.info(msg)
 
 
 def initialize():

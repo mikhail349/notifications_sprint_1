@@ -8,9 +8,6 @@ from src.storages.base import DataStorage
 
 class UserHandler(Handler):
 
-    def __init__(self, storage: DataStorage) -> None:
-        self.storage = storage
-
     async def get_data(self, msg_body: Dict) -> Dict:
         recipient = await self.storage.get_user(username=msg_body["username"])
         payload = {
