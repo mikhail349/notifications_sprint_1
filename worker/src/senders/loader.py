@@ -25,7 +25,7 @@ def load_module(name: str) -> PluginModule:
     return importlib.import_module(name)
 
 
-def setup_plugins(plugins: List[str]) -> None:
+def load_plugins(plugins: List[str]) -> None:
     """Загрузить плагины.
 
     Args:

@@ -7,6 +7,8 @@ from src.storages.base import NotificationStorage, DataStorage
 from src.storages.models.user import User
 from src.storages.models.review import Review, Movie
 from src.storages.models.factory import create_user, create_review
+from src.storages.models.handler import EventHandler
+from src.storages.models.sender import DeliverySender
 
 
 class MockedDataStorage(DataStorage):
@@ -25,64 +27,18 @@ class MockedNotificationStorage(NotificationStorage):
     async def get_queues(self) -> List[str]:
         return ['low_priority', 'high_priority']
 
-    async def get_sender_plugins(self) -> List[str]:
-        return ['src.senders.email']
+    async def get_senders(self) -> List[DeliverySender]:
+        return [
+            DeliverySender(
+                delivery_type=DeliveryType.EMAIL,
+                sender_plugin='src.senders.email',
+            ),
+        ]
     
-    async def get_handlers(self) -> List[str]:
-        return ['src.handlers.user']
-    
-    async def get_handler(self, event_type: EventType) -> List[str]:
-        mapping = {
-            EventType.USER_REGISTERED: 'src.handlers.user',
-        }
-        return mapping[event_type]
-
-    async def get_sender_plugin(
-        self,
-        delivery_type: DeliveryType,
-    ) -> str:
-        mapping = {
-            DeliveryType.EMAIL: 'src.senders.email',
-        }
-        return mapping[delivery_type]
-
-    async def get_template(
-        self,
-        delivery_type: DeliveryType,
-        event_type: EventType
-    ) -> str:
-        def get_email(event_type: EventType):
-            emails = {
-                EventType.USER_REGISTERED: """
-                    <html>
-                        <body>
-                            <div>Приветствуем Вас, {{name}}!</div>
-                        </body>
-                    </html>
-                """,
-                EventType.REVIEW_RATED: """
-                    <html>
-                        <body>
-                            <div>
-                                Вашу рецензию на фильм {{movie_name}}
-                                оценил пользователь {{rater_name}}
-                            </div>
-                        </body>
-                    </html>
-                """
-            }
-            return emails[event_type]
-
-        def get_sms(event_type: EventType):
-            sms = {
-                EventType.USER_REGISTERED: """
-                    Приветствуем Вас, {{name}}!
-                """
-            }
-            return sms[event_type]
-
-        mapping = {
-            DeliveryType.EMAIL: get_email,
-            DeliveryType.SMS: get_sms
-        }
-        return mapping[delivery_type](event_type)
+    async def get_handlers(self) -> List[EventHandler]:
+        return [
+            EventHandler(
+                event_type=EventType.USER_REGISTERED,
+                handler_plugin='src.handlers.user',
+            ),
+        ]

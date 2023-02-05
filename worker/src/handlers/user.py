@@ -11,8 +11,8 @@ class UserHandler(Handler):
     def __init__(self, storage: DataStorage) -> None:
         self.storage = storage
 
-    async def get_data(self, msg: Dict) -> Dict:
-        recipient = await self.storage.get_user(username=msg["username"])
+    async def get_data(self, msg_body: Dict) -> Dict:
+        recipient = await self.storage.get_user(username=msg_body["username"])
         payload = {
             "name": recipient.name
         }
