@@ -16,10 +16,10 @@ class PriorityType(enum.Enum):
 class MockedNotificationStorage(NotificationStorage):
     """Класс имитации хранилища уведомлений."""
 
-    async def get_priorities(self) -> List[str]:  # noqa: D102
+    async def get_priorities(self) -> List[str]:
         return [priority.value for priority in PriorityType]
 
-    async def get_priority(  # noqa: D102
+    async def get_priority(
         self,
         event_type: EventType,
     ) -> str:

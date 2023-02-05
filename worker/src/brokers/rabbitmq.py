@@ -39,6 +39,6 @@ class RabbitMQ(Broker):
         notification = Notification.parse_raw(message.body.decode())
         await self.msg_callback(notification)
 
-    async def consume(self, callback: MsgCallback) -> None:  # noqa: D102
+    async def consume(self, callback: MsgCallback) -> None:
         self.msg_callback = callback
         await self.queue.consume(self.on_message, no_ack=True)
