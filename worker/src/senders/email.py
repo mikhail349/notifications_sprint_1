@@ -1,20 +1,30 @@
 """Модуль классов отправителя email."""
 import logging
-from typing import List
 
 from src.senders import factory
 from src.senders.base import Sender
+from src.storages.models.user import User
 
 
 class EmailSender(Sender):
     """Класс отправитель уведомлений по email."""
 
-    async def send(self, text: str) -> None:  # recipients: List[str], 
-        """Отправить уведомление."""
-        msg = f"""
-            subject: None
-            text: {text}
-        """
+    async def send(
+        self,
+        recipient: User,
+        text: str,
+        subject: str = None,
+    ) -> None:
+        msg = """
+            Письмо отправлено.
+            recipient: {email}
+            subject: {subject}
+            body: {text}
+        """.format(
+            email=recipient.email,
+            subject=subject,
+            text=text,
+        )
         logging.info(msg)
 
 

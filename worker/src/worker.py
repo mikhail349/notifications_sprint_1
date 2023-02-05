@@ -1,17 +1,11 @@
 """Модуль обработчика событий."""
 import logging
-from typing import Optional, Dict
-
-
+from typing import Dict
 
 from src.brokers.base import Broker
+from src.handlers.base import EventHandler
 from src.models.notification import DeliveryType, EventType, Notification
-from src.handlers import factory as handlers_factory
-from src.handlers.base import Handler
-from src.senders import factory
 from src.senders.base import Sender
-from src.storages.base import NotificationStorage, DataStorage
-from src.storages.models.user import User
 from src.templaters.base import Templater
 
 
@@ -30,29 +24,35 @@ class Worker(object):
 
         self.broker = broker
         self.templater = templater
-        self.handlers: Dict[EventType, Handler] = {}
+        self.handlers: Dict[EventType, EventHandler] = {}
         self.senders: Dict[DeliveryType, Sender] = {}
-    
-    def add_handler(self, event_type: EventType, handler: Handler) -> None:
+
+    def add_handler(
+        self,
+        event_type: EventType,
+        event_handler: EventHandler,
+    ) -> None:
         """Добавить обработчик события.
 
         Args:
             event_type: тип события
-            handler: обработчик
-        """
-        self.handlers[event_type] = handler
+            event_handler: обработчик
 
-    def get_handler(self, event_type: EventType) -> Handler:
+        """
+        self.handlers[event_type] = event_handler
+
+    def get_handler(self, event_type: EventType) -> EventHandler:
         """Получить обработчик по типу события.
 
         Args:
             event_type: тип события
-        
+
         Returns:
-            `Handler`: обработчик
+            EventHandler: обработчик
+
         """
         return self.handlers[event_type]
-    
+
     def add_sender(self, delivery_type: DeliveryType, sender: Sender) -> None:
         """Добавить отправителя.
 
@@ -68,9 +68,9 @@ class Worker(object):
 
         Args:
             delivery_type: тип отправки
-        
-        Returns
-            `Sender`: отправитель
+
+        Returns:
+            Sender: отправитель
 
         """
         return self.senders[delivery_type]
@@ -84,23 +84,9 @@ class Worker(object):
         """
         self.logger.info('New message: {0}'.format(msg))
 
-        # data getting
-        handler = self.get_handler(msg.event_type)
-        data = await handler.get_data(msg.body)
-
-        # templating
-        template = await self.templater.get_template(
-            delivery_type=msg.delivery_type,
-            event_type=msg.event_type
-        )
-        filled_template = self.templater.get_filled_template(
-            template=template,
-            data=data["payload"]
-        )
-        
-        # sending
         sender = self.get_sender(msg.delivery_type)
-        await sender.send(text=filled_template)
+        event_handler = self.get_handler(msg.event_type)
+        await event_handler.process(msg=msg, sender=sender)
 
     async def run(self) -> None:
         """Запустить воркер."""

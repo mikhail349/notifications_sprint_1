@@ -1,32 +1,31 @@
-"""Модуль обработчика событий пользователя."""
+"""Модуль обработчика событий рецензии."""
 from src.handlers import factory
 from src.handlers.base import EventHandler
 from src.models.notification import Notification
 from src.senders.base import Sender
 
 
-class UserHandler(EventHandler):
-    """Класс обработчика событий пользователя."""
+class ReviewHandler(EventHandler):
+    """Класс обработчика событий рецензии."""
 
     async def process(
         self,
         msg: Notification,
         sender: Sender,
     ):
-        recipient = await self.data_storage.get_user(
-            username=msg.body['username'],
-        )
+        user = await self.data_storage.get_user(username=msg.body['username'])
+        review = await self.data_storage.get_review(id=msg.body['review_id'])
         template = await self.notification_storage.get_template(
             delivery_type=msg.delivery_type,
             event_type=msg.event_type,
         )
         filled_template = self.templater.get_filled_template(
             template=template,
-            template_data={'user': recipient},
+            template_data={'user': user, 'review': review},
         )
-        await sender.send(recipient=recipient, text=filled_template)
+        await sender.send(recipient=review.author, text=filled_template)
 
 
 def initialize():
     """Зарегистрировать модуль в фабрике."""
-    factory.register('src.handlers.user', UserHandler)
+    factory.register('src.handlers.review', ReviewHandler)

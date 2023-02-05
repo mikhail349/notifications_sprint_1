@@ -35,7 +35,7 @@ class RabbitMQ(Broker):
         """
         if self.msg_callback is None:
             return
-        
+
         notification = Notification.parse_raw(message.body.decode())
         await self.msg_callback(notification)
         await message.ack()

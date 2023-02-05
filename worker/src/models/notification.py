@@ -16,6 +16,7 @@ class EventType(enum.Enum):
 
     REVIEW_RATED = 'review-reporting.v1.rated'
     USER_REGISTERED = 'user-reporting.v1.registered'
+    MASS = 'manager-reporting.v1.mass'
 
 
 class Notification(BaseModel):
