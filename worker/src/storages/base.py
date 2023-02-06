@@ -1,12 +1,10 @@
 """Модуль абстрактных хранилищ."""
 import uuid
 from abc import ABC, abstractmethod
-from typing import List
+from typing import Any, List
 
-from src.models.notification import DeliveryType, EventType
-from src.storages.models.handler import EventHandler
+from src.models.notification import DeliveryType, EventType, Notification
 from src.storages.models.review import Review
-from src.storages.models.sender import DeliverySender
 from src.storages.models.user import User
 
 
@@ -66,29 +64,14 @@ class NotificationStorage(ABC):
     """Абстрактный класс хранилища уведомлений."""
 
     @abstractmethod
-    async def get_queues(self) -> List[str]:
-        """Получить список очередей.
+    async def add_notification(self, notification: Notification) -> Any:
+        """Добавить уведомление в базу.
+
+        Args:
+            notification: уведомление
 
         Returns:
-            `List[str]`: список очередей
-
-        """
-
-    @abstractmethod
-    async def get_senders(self) -> List[DeliverySender]:
-        """Получить список отправителей.
-
-        Returns:
-            `List[DeliverySender]`: список отправителей
-
-        """
-
-    @abstractmethod
-    async def get_handlers(self) -> List[EventHandler]:
-        """Получить список обработчиков событий.
-
-        Returns:
-            `List[EventHandler]`: список обработчиков событий
+            Any: ИД уведомления
 
         """
 

@@ -15,6 +15,9 @@ class EmailSender(Sender):
         text: str,
         subject: Optional[str] = None,
     ) -> None:
+        if not recipient.notification_settings.allow_email:
+            return
+
         msg = """
             Письмо отправлено.
             recipient: {email}

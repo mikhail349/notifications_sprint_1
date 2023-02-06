@@ -15,6 +15,9 @@ class SMSSender(Sender):
         text: str,
         subject: Optional[str] = None,
     ) -> None:
+        if not recipient.notification_settings.allow_sms:
+            return
+
         msg = """
             SMS отправлено.
             recipient: {phone_number}

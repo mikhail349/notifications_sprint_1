@@ -1,13 +1,11 @@
 """Модуль имитации хранилищ."""
 import uuid
-from typing import List
+from typing import Any, List
 
-from src.models.notification import DeliveryType, EventType
+from src.models.notification import DeliveryType, EventType, Notification
 from src.storages.base import DataStorage, NotificationStorage
-from src.storages.models.factory import create_review, create_user
-from src.storages.models.handler import EventHandler
+from src.storages.models import factory
 from src.storages.models.review import Review
-from src.storages.models.sender import DeliverySender
 from src.storages.models.user import User
 
 
@@ -15,55 +13,25 @@ class MockedDataStorage(DataStorage):
     """Класс имитации хранилища данных."""
 
     async def get_user(self, username: str) -> User:
-        return create_user(username=username)
+        return factory.create_user(username=username)
 
     async def get_review(self, id: uuid.UUID) -> Review:
-        return create_review(id=id)
+        return factory.create_review(id=id)
 
     async def get_users_by_cohort(self, cohort: str) -> List[User]:
-        return [create_user() for _ in range(3)]
+        return [factory.create_user() for _ in range(3)]
 
     async def get_users(self, usernames: List[str]) -> List[User]:
-        return [create_user(username=username) for username in usernames]
+        return [
+            factory.create_user(username=username) for username in usernames
+        ]
 
 
 class MockedNotificationStorage(NotificationStorage):
     """Класс имитации хранилища настроек уведомлений."""
 
-    async def get_queues(self) -> List[str]:
-        return ['low_priority', 'high_priority']
-
-    async def get_senders(self) -> List[DeliverySender]:
-        return [
-            DeliverySender(
-                delivery_type=DeliveryType.EMAIL,
-                sender_plugin='src.senders.email',
-            ),
-            DeliverySender(
-                delivery_type=DeliveryType.SMS,
-                sender_plugin='src.senders.sms',
-            ),
-            DeliverySender(
-                delivery_type=DeliveryType.WEB_SOCKET,
-                sender_plugin='src.senders.websocket',
-            ),
-        ]
-
-    async def get_handlers(self) -> List[EventHandler]:
-        return [
-            EventHandler(
-                event_type=EventType.USER_REGISTERED,
-                handler_plugin='src.handlers.user',
-            ),
-            EventHandler(
-                event_type=EventType.ADMIN,
-                handler_plugin='src.handlers.admin',
-            ),
-            EventHandler(
-                event_type=EventType.REVIEW_RATED,
-                handler_plugin='src.handlers.review',
-            ),
-        ]
+    async def add_notification(self, notification: Notification) -> Any:
+        return factory.create_random_id()
 
     async def get_template(
         self,

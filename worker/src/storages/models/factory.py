@@ -6,12 +6,35 @@ from typing import Optional
 from faker import Faker
 
 from src.storages.models.review import Movie, Review
-from src.storages.models.user import User
+from src.storages.models.user import User, UserNotificationSettings
 
 faker = Faker()
 
 MAX_MOVIE_RATING = 10.0
 
+
+def create_random_id() -> uuid.UUID:
+    """Создать рандомный ИД.
+
+    Returns:
+        UUID: ИД
+
+    """
+    return uuid.uuid4()
+
+
+def create_user_notification_settings() -> UserNotificationSettings:
+    """Создать рандомные настройки уведомлений пользователя.
+
+    Returns:
+        UserNotificationSettings: настройки уведомлений пользователя
+
+    """
+    BOOL_CHOICES = [True, False]
+    return UserNotificationSettings(
+        allow_email=random.choice(BOOL_CHOICES),
+        allow_sms=random.choice(BOOL_CHOICES)
+    )
 
 def create_user(username: Optional[str] = None) -> User:
     """Создать рандомного пользователя.
@@ -28,6 +51,7 @@ def create_user(username: Optional[str] = None) -> User:
         name=faker.name(),
         email=faker.email(),
         phone_number=faker.phone_number(),
+        notification_settings=create_user_notification_settings()
     )
 
 

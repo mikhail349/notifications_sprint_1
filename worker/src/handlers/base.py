@@ -1,5 +1,6 @@
 """Модуль абстраткного обработчика событий."""
 from abc import ABC, abstractmethod
+from typing import Any
 
 from src.models.notification import Notification
 from src.senders.base import Sender
@@ -41,3 +42,15 @@ class EventHandler(ABC):
             sender: отпрвитель
 
         """
+
+    async def save_notification(self, notification: Notification) -> Any:
+        """Сохранить уведомление в БД.
+
+        Args:
+            notification: уведомление
+
+        Returns:
+            Any: ИД созданного уведомления
+
+        """
+        return await self.notification_storage.add_notification(notification)

@@ -1,5 +1,4 @@
 """Модуль обработчика событий."""
-import logging
 from typing import Dict
 
 from src.brokers.base import Broker
@@ -18,8 +17,6 @@ class Worker(object):
             broker: брокер сообщений
 
         """
-        self.logger = logging.getLogger(__name__)
-
         self.broker = broker
         self.handlers: Dict[EventType, EventHandler] = {}
         self.senders: Dict[DeliveryType, Sender] = {}
@@ -79,13 +76,11 @@ class Worker(object):
             msg: сообщение
 
         """
-        self.logger.info('New message: {0}'.format(msg))
-
         sender = self.get_sender(msg.delivery_type)
         event_handler = self.get_handler(msg.event_type)
         await event_handler.process(msg=msg, sender=sender)
+        await event_handler.save_notification(msg)
 
     async def run(self) -> None:
         """Запустить воркер."""
         await self.broker.consume(self.on_message)
-        self.logger.info('Waiting for messages. To exit press CTRL+C')

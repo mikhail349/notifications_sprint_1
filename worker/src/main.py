@@ -4,7 +4,6 @@ import logging
 
 from src.brokers.rabbitmq import QueueType, RabbitMQ
 from src.handlers.admin import AdminHandler
-from src.handlers.base import EventHandler
 from src.handlers.review import ReviewHandler
 from src.handlers.user import UserHandler
 from src.models.notification import DeliveryType, EventType
@@ -66,7 +65,7 @@ def init_senders(worker: Worker):
     worker.add_sender(DeliveryType.WEB_SOCKET, WebsocketSender())
 
 
-async def main():  # noqa: WPS210, WPS217
+async def main():
     """Основная функция."""
     logging.basicConfig(level=logging.INFO)
 
@@ -79,6 +78,8 @@ async def main():  # noqa: WPS210, WPS217
             init_handlers(worker)
             init_senders(worker)
             await worker.run()
+
+        logging.info('Waiting for messages. To exit press CTRL+C')
         await asyncio.Future()
 
 if __name__ == '__main__':
