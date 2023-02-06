@@ -23,8 +23,15 @@ def create_random_id() -> uuid.UUID:
     return uuid.uuid4()
 
 
-def create_user_notification_settings() -> UserNotificationSettings:
+def create_user_notification_settings(
+    allow_email: Optional[bool] = None,
+    allow_sms: Optional[bool] = None,
+) -> UserNotificationSettings:
     """Создать рандомные настройки уведомлений пользователя.
+
+    Args:
+        allow_email: получать email. Если None - сгенерировать
+        allow_sms: получать sms. Если None - сгенерировать
 
     Returns:
         UserNotificationSettings: настройки уведомлений пользователя
@@ -32,8 +39,8 @@ def create_user_notification_settings() -> UserNotificationSettings:
     """
     bool_choices = [True, False]
     return UserNotificationSettings(
-        allow_email=random.choice(bool_choices),
-        allow_sms=random.choice(bool_choices),
+        allow_email=allow_email or random.choice(bool_choices),
+        allow_sms=allow_sms or random.choice(bool_choices),
     )
 
 
@@ -41,7 +48,7 @@ def create_user(username: Optional[str] = None) -> User:
     """Создать рандомного пользователя.
 
     Args:
-        username: имя пользователя. Если пусто - сгенерировать
+        username: имя пользователя. Если None - сгенерировать
 
     Returns:
         User: пользователь
@@ -52,7 +59,10 @@ def create_user(username: Optional[str] = None) -> User:
         name=faker.name(),
         email=faker.email(),
         phone_number=faker.phone_number(),
-        notification_settings=create_user_notification_settings(),
+        notification_settings=create_user_notification_settings(
+            allow_email=True,
+            allow_sms=True,
+        ),
     )
 
 
