@@ -16,7 +16,7 @@ connection: Union[aio_pika.abc.AbstractConnection, None] = None
 @backoff.on_exception(backoff.expo, exception=ConnectionError)
 async def connect() -> None:
     """Подключиться к брокеру."""
-    global broker, connection  # noqa: WPS420
+    global broker, connection  # noqa: WPS100, WPS420
 
     notification_storage = MockedNotificationStorage()
     connection = await aio_pika.connect_robust(

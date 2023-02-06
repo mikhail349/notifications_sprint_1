@@ -3,9 +3,9 @@ from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, Response
 
+from src.api.v1.models.mass import Mass
 from src.api.v1.models.review import ReviewRatingEvent
 from src.api.v1.models.user import User
-from src.api.v1.models.mass import Mass
 from src.brokers.base import Broker
 from src.models.base import DeliveryType, EventType, Notification
 from src.services import broker
