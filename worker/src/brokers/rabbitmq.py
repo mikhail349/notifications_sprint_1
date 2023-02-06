@@ -1,10 +1,18 @@
 """Модуль RabbitMQ."""
+import enum
 from typing import Optional
 
 import aio_pika
 
 from src.brokers.base import Broker, MsgCallback
 from src.models.notification import Notification
+
+
+class QueueType(enum.Enum):
+    """Перечисление очередей."""
+
+    LOW_PRIORITY = 'low_priority'
+    HIGH_PRIORITY = 'high_priority'
 
 
 class RabbitMQ(Broker):

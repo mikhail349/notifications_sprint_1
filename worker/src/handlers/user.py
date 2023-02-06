@@ -1,5 +1,4 @@
 """Модуль обработчика событий пользователя."""
-from src.handlers import factory
 from src.handlers.base import EventHandler
 from src.models.notification import Notification
 from src.senders.base import Sender
@@ -25,8 +24,3 @@ class UserHandler(EventHandler):
             template_data={'user': recipient},
         )
         await sender.send(recipient=recipient, text=filled_template)
-
-
-def initialize():
-    """Зарегистрировать модуль в фабрике."""
-    factory.register('src.handlers.user', UserHandler)

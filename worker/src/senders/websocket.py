@@ -2,7 +2,6 @@
 import logging
 from typing import Optional
 
-from src.senders import factory
 from src.senders.base import Sender
 from src.storages.models.user import User
 
@@ -25,8 +24,3 @@ class WebsocketSender(Sender):
             text=text,
         )
         logging.info(msg)
-
-
-def initialize():
-    """Зарегистрировать модуль в фабрике."""
-    factory.register('src.senders.websocket', WebsocketSender)

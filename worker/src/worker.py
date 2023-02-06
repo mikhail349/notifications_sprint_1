@@ -6,24 +6,21 @@ from src.brokers.base import Broker
 from src.handlers.base import EventHandler
 from src.models.notification import DeliveryType, EventType, Notification
 from src.senders.base import Sender
-from src.templaters.base import Templater
 
 
 class Worker(object):
     """Класс обработчика событий."""
 
-    def __init__(self, broker: Broker, templater: Templater) -> None:
+    def __init__(self, broker: Broker) -> None:
         """Инициализировать класс обработчика событий.
 
         Args:
             broker: брокер сообщений
-            templater: шаблонизатор
 
         """
         self.logger = logging.getLogger(__name__)
 
         self.broker = broker
-        self.templater = templater
         self.handlers: Dict[EventType, EventHandler] = {}
         self.senders: Dict[DeliveryType, Sender] = {}
 

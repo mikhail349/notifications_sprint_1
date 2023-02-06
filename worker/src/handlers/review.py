@@ -1,5 +1,4 @@
 """Модуль обработчика событий рецензии."""
-from src.handlers import factory
 from src.handlers.base import EventHandler
 from src.models.notification import Notification
 from src.senders.base import Sender
@@ -24,8 +23,3 @@ class ReviewHandler(EventHandler):
             template_data={'user': user, 'review': review},
         )
         await sender.send(recipient=review.author, text=filled_template)
-
-
-def initialize():
-    """Зарегистрировать модуль в фабрике."""
-    factory.register('src.handlers.review', ReviewHandler)

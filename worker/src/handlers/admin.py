@@ -1,7 +1,6 @@
 """Моудль обработчика рассылок из админ панели."""
 import uuid
 
-from src.handlers import factory
 from src.handlers.base import EventHandler
 from src.models.notification import Notification
 from src.senders.base import Sender
@@ -32,8 +31,3 @@ class AdminHandler(EventHandler):
                 text=filled_template,
                 subject=msg.body['subject'],
             )
-
-
-def initialize():
-    """Зарегистрировать модуль в фабрике."""
-    factory.register('src.handlers.admin', AdminHandler)
