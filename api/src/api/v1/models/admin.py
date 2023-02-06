@@ -4,7 +4,6 @@ import uuid
 from pydantic import BaseModel
 
 from src.api.v1.models.base import Event
-from src.models.base import DeliveryType
 
 
 class AdminModel(BaseModel):

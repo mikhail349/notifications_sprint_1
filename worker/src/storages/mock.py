@@ -39,6 +39,14 @@ class MockedNotificationStorage(NotificationStorage):
                 delivery_type=DeliveryType.EMAIL,
                 sender_plugin='src.senders.email',
             ),
+            DeliverySender(
+                delivery_type=DeliveryType.SMS,
+                sender_plugin='src.senders.sms',
+            ),
+            DeliverySender(
+                delivery_type=DeliveryType.WEB_SOCKET,
+                sender_plugin='src.senders.websocket',
+            ),
         ]
 
     async def get_handlers(self) -> List[EventHandler]:

@@ -9,7 +9,7 @@ class DeliveryType(enum.Enum):
 
     EMAIL = 'email'
     SMS = 'sms'
-    WEB_SOCKET = "websocket"
+    WEB_SOCKET = 'websocket'
 
 
 class EventType(enum.Enum):

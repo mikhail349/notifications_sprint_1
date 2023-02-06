@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Response
 
 from src.api.v1.models.admin import AdminEvent
 from src.brokers.base import Broker
-from src.models.base import DeliveryType, EventType, Notification
+from src.models.base import EventType, Notification
 from src.services import broker
 
 router = APIRouter(prefix='/admin', tags=['Админ-панель'])
