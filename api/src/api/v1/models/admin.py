@@ -3,13 +3,19 @@ import uuid
 
 from pydantic import BaseModel
 
+from src.api.v1.models.base import Event
 from src.models.base import DeliveryType
 
 
-class AdminEvent(BaseModel):
-    """Модель события из админ панели."""
+class AdminModel(BaseModel):
+    """Модель админ панели."""
 
     cohort: str
     template_id: uuid.UUID
     subject: str
-    deliver_type: DeliveryType
+
+
+class AdminEvent(Event):
+    """Модель события из админ панели."""
+
+    body: AdminModel

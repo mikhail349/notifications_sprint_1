@@ -30,9 +30,9 @@ async def post_admin_event(
 
     """
     notification = Notification(
-        delivery_type=DeliveryType.EMAIL,
+        delivery_type=admin_event.delivery_type,
         event_type=EventType.ADMIN,
-        body=admin_event,
+        body=admin_event.body,
     )
     await broker.post(notification)
     return Response(status_code=HTTPStatus.OK)
