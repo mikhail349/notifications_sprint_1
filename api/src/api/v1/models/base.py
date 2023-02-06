@@ -9,6 +9,7 @@ class DeliveryType(str, enum.Enum):  # noqa: WPS600
 
     EMAIL = 'email'
     SMS = 'sms'
+    WEB_SOCKET = "websocket"
 
 
 class Event(BaseModel):

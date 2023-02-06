@@ -48,8 +48,8 @@ class MockedNotificationStorage(NotificationStorage):
                 handler_plugin='src.handlers.user',
             ),
             EventHandler(
-                event_type=EventType.MASS,
-                handler_plugin='src.handlers.mass',
+                event_type=EventType.ADMIN,
+                handler_plugin='src.handlers.admin',
             ),
             EventHandler(
                 event_type=EventType.REVIEW_RATED,

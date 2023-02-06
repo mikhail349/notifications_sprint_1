@@ -3,7 +3,6 @@ from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, Response
 
-from src.api.v1.models.mass import Mass
 from src.api.v1.models.review import ReviewRatingEvent
 from src.api.v1.models.user import User
 from src.brokers.base import Broker
@@ -59,33 +58,6 @@ async def post_user_registered(
         delivery_type=DeliveryType.EMAIL,
         event_type=EventType.USER_REGISTERED,
         body=user,
-    )
-    await broker.post(notification)
-    return Response(status_code=HTTPStatus.OK)
-
-
-@router.post(
-    path='/mass',
-    summary='Событие массовой рассылки',
-)
-async def post_mass(
-    mass: Mass,
-    broker: Broker = Depends(broker.get_broker),  # noqa: WPS404, B008
-) -> Response:
-    """Отправить событие массовой рассылки.
-
-    Args:
-        mass: модель массовой рассылки `Mass`
-        broker: брокер сообщений
-
-    Returns:
-        Response: http ответ
-
-    """
-    notification = Notification(
-        delivery_type=DeliveryType.EMAIL,
-        event_type=EventType.MASS,
-        body=mass,
     )
     await broker.post(notification)
     return Response(status_code=HTTPStatus.OK)

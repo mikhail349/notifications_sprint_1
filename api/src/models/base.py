@@ -9,6 +9,7 @@ class DeliveryType(enum.Enum):
 
     EMAIL = 'email'
     SMS = 'sms'
+    WEB_SOCKET = "websocket"
 
 
 class EventType(enum.Enum):
@@ -16,7 +17,7 @@ class EventType(enum.Enum):
 
     REVIEW_RATED = 'review-reporting.v1.rated'
     USER_REGISTERED = 'user-reporting.v1.registered'
-    MASS = 'manager-reporting.v1.mass'
+    ADMIN = 'admin-reporting.v1.event'
 
 
 class Notification(BaseModel):

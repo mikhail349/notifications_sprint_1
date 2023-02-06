@@ -1,0 +1,38 @@
+"""Модуль API-запросов событий."""
+from http import HTTPStatus
+
+from fastapi import APIRouter, Depends, Response
+
+from src.api.v1.models.admin import AdminEvent
+from src.brokers.base import Broker
+from src.models.base import DeliveryType, EventType, Notification
+from src.services import broker
+
+router = APIRouter(prefix='/admin', tags=['Админ-панель'])
+
+
+@router.post(
+    path='/',
+    summary='Событие из админ-панели',
+)
+async def post_admin_event(
+    admin_event: AdminEvent,
+    broker: Broker = Depends(broker.get_broker),  # noqa: WPS404, B008
+) -> Response:
+    """Отправить событие массовой рассылки.
+
+    Args:
+        admin_event: модель события `AdminEvent`
+        broker: брокер сообщений
+
+    Returns:
+        Response: http ответ
+
+    """
+    notification = Notification(
+        delivery_type=DeliveryType.EMAIL,
+        event_type=EventType.ADMIN,
+        body=admin_event,
+    )
+    await broker.post(notification)
+    return Response(status_code=HTTPStatus.OK)

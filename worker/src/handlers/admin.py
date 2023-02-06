@@ -1,4 +1,4 @@
-"""Моудль обработчика массовых рассылок."""
+"""Моудль обработчика рассылок из админ панели."""
 import uuid
 
 from src.handlers import factory
@@ -7,8 +7,8 @@ from src.models.notification import Notification
 from src.senders.base import Sender
 
 
-class MassHandler(EventHandler):
-    """Класс обработчика массовых рассылок."""
+class AdminHandler(EventHandler):
+    """Класс обработчика рассылок из админ панели."""
 
     async def process(
         self,
@@ -36,4 +36,4 @@ class MassHandler(EventHandler):
 
 def initialize():
     """Зарегистрировать модуль в фабрике."""
-    factory.register('src.handlers.mass', MassHandler)
+    factory.register('src.handlers.admin', AdminHandler)
