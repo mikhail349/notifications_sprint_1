@@ -1,5 +1,6 @@
 """Модуль абстрактных классов отправителя."""
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from src.storages.models.user import User
 
@@ -12,7 +13,7 @@ class Sender(ABC):
         self,
         recipient: User,
         text: str,
-        subject: str = None,
+        subject: Optional[str] = None,
     ) -> None:
         """Отправить уведомление.
 

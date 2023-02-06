@@ -1,4 +1,5 @@
 """Моудль обработчика массовых рассылок."""
+import uuid
 
 from src.handlers import factory
 from src.handlers.base import EventHandler
@@ -18,7 +19,7 @@ class MassHandler(EventHandler):
             cohort=msg.body['cohort'],
         )
         template = await self.notification_storage.get_template_by_id(
-            id=msg.body['template_id'],
+            id=uuid.UUID(msg.body['template_id']),
         )
 
         for recipient in recipients:

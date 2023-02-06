@@ -1,10 +1,10 @@
 """Модуль с абстрактным брокером сообщений."""
 from abc import ABC, abstractmethod
-from typing import Callable
+from typing import Awaitable, Callable
 
 from src.models.notification import Notification
 
-MsgCallback = Callable[[Notification], None]
+MsgCallback = Callable[[Notification], Awaitable]
 
 
 class Broker(ABC):

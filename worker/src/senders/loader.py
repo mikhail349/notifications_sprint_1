@@ -1,11 +1,11 @@
 """Модуль загрущзи плагинов отправителей."""
 import importlib
-from abc import ABC, abstractmethod
-from typing import List
+from abc import abstractmethod
+from typing import List, Protocol, cast
 
 
-class PluginModule(ABC):
-    """Абстрактный класс модуля."""
+class PluginModule(Protocol):
+    """Протокол модуля для загрузки."""
 
     @staticmethod
     @abstractmethod
@@ -21,8 +21,9 @@ def load_module(name: str) -> PluginModule:
 
     Returns:
         PluginModule: модуль
+
     """
-    return importlib.import_module(name)
+    return cast(PluginModule, importlib.import_module(name))
 
 
 def load_plugins(plugins: List[str]) -> None:

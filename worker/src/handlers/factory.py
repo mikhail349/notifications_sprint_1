@@ -7,17 +7,17 @@ handlers: Dict[str, Callable[..., EventHandler]] = {}
 
 
 def register(
-    sender_path: str,
+    handler_path: str,
     creation_fn: Callable[..., EventHandler],
 ) -> None:
     """Зарегистрировать обработчика.
 
     Args:
-        sender_path: путь обработчика
+        handler_path: путь обработчика
         creation_fn: функция инициализации обработчика
 
     """
-    handlers[sender_path] = creation_fn
+    handlers[handler_path] = creation_fn
 
 
 def create(handler_path: str, *args, **kwargs) -> EventHandler:

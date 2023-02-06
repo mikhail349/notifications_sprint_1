@@ -1,4 +1,6 @@
 """Модуль RabbitMQ."""
+from typing import Optional
+
 import aio_pika
 
 from src.brokers.base import Broker, MsgCallback
@@ -21,7 +23,7 @@ class RabbitMQ(Broker):
 
         """
         self.queue = queue
-        self.msg_callback = None
+        self.msg_callback: Optional[MsgCallback] = None
 
     async def on_message(
         self,

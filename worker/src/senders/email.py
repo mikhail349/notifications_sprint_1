@@ -1,5 +1,6 @@
 """Модуль классов отправителя email."""
 import logging
+from typing import Optional
 
 from src.senders import factory
 from src.senders.base import Sender
@@ -13,7 +14,7 @@ class EmailSender(Sender):
         self,
         recipient: User,
         text: str,
-        subject: str = None,
+        subject: Optional[str] = None,
     ) -> None:
         msg = """
             Письмо отправлено.
