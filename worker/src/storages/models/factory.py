@@ -30,11 +30,12 @@ def create_user_notification_settings() -> UserNotificationSettings:
         UserNotificationSettings: настройки уведомлений пользователя
 
     """
-    BOOL_CHOICES = [True, False]
+    bool_choices = [True, False]
     return UserNotificationSettings(
-        allow_email=random.choice(BOOL_CHOICES),
-        allow_sms=random.choice(BOOL_CHOICES)
+        allow_email=random.choice(bool_choices),
+        allow_sms=random.choice(bool_choices),
     )
+
 
 def create_user(username: Optional[str] = None) -> User:
     """Создать рандомного пользователя.
@@ -51,7 +52,7 @@ def create_user(username: Optional[str] = None) -> User:
         name=faker.name(),
         email=faker.email(),
         phone_number=faker.phone_number(),
-        notification_settings=create_user_notification_settings()
+        notification_settings=create_user_notification_settings(),
     )
 
 
