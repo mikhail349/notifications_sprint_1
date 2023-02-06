@@ -2,9 +2,10 @@
 import uuid
 from typing import Any, List
 
-from src.models.notification import DeliveryType, EventType, Notification
+from src.models.message import DeliveryType, EventType
 from src.storages.base import DataStorage, NotificationStorage
 from src.storages.models import factory
+from src.storages.models.notification import Notification
 from src.storages.models.review import Review
 from src.storages.models.user import User
 
@@ -28,7 +29,7 @@ class MockedDataStorage(DataStorage):
 
 
 class MockedNotificationStorage(NotificationStorage):
-    """Класс имитации хранилища настроек уведомлений."""
+    """Класс имитации хранилища уведомлений."""
 
     async def add_notification(self, notification: Notification) -> Any:
         return factory.create_random_id()

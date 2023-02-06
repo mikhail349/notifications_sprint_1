@@ -2,9 +2,9 @@
 from abc import ABC, abstractmethod
 from typing import Awaitable, Callable
 
-from src.models.notification import Notification
+from src.models.message import Message
 
-MsgCallback = Callable[[Notification], Awaitable]
+MsgCallback = Callable[[Message], Awaitable]
 
 
 class Broker(ABC):

@@ -6,7 +6,7 @@ from src.brokers.rabbitmq import QueueType, RabbitMQ
 from src.handlers.admin import AdminHandler
 from src.handlers.review import ReviewHandler
 from src.handlers.user import UserHandler
-from src.models.notification import DeliveryType, EventType
+from src.models.message import DeliveryType, EventType
 from src.senders.email import EmailSender
 from src.senders.sms import SMSSender
 from src.senders.websocket import WebsocketSender

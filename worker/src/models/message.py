@@ -1,4 +1,4 @@
-"""Модуль базовых моделей."""
+"""Модуль базовых моделей сервиса."""
 import enum
 
 from pydantic import BaseModel
@@ -20,8 +20,8 @@ class EventType(enum.Enum):
     ADMIN = 'admin-reporting.v1.event'
 
 
-class Notification(BaseModel):
-    """Модель базового уведомления."""
+class Message(BaseModel):
+    """Модель базового сообщения."""
 
     delivery_type: DeliveryType
     event_type: EventType

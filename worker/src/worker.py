@@ -3,8 +3,9 @@ from typing import Dict
 
 from src.brokers.base import Broker
 from src.handlers.base import EventHandler
-from src.models.notification import DeliveryType, EventType, Notification
+from src.models.message import DeliveryType, EventType, Message
 from src.senders.base import Sender
+from src.storages.models.notification import Status
 
 
 class Worker(object):
@@ -69,7 +70,7 @@ class Worker(object):
         """
         return self.senders[delivery_type]
 
-    async def on_message(self, msg: Notification):
+    async def on_message(self, msg: Message):
         """Событие получения сообщения.
 
         Args:
@@ -78,8 +79,16 @@ class Worker(object):
         """
         sender = self.get_sender(msg.delivery_type)
         event_handler = self.get_handler(msg.event_type)
-        await event_handler.process(msg=msg, sender=sender)
-        await event_handler.save_notification(msg)
+        try:
+            await event_handler.process(msg=msg, sender=sender)
+        except Exception as exc:
+            await event_handler.save_message(
+                msg=msg,
+                status=Status.ERROR,
+                comments=str(exc),
+            )
+        else:
+            await event_handler.save_message(msg=msg, status=Status.SUCCESS)
 
     async def run(self) -> None:
         """Запустить воркер."""

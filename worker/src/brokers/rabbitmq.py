@@ -5,7 +5,7 @@ from typing import Optional
 import aio_pika
 
 from src.brokers.base import Broker, MsgCallback
-from src.models.notification import Notification
+from src.models.message import Message
 
 
 class QueueType(enum.Enum):
@@ -37,7 +37,7 @@ class RabbitMQ(Broker):
         self,
         message: aio_pika.abc.AbstractIncomingMessage,
     ) -> None:
-        """Callback-фунция для получения сообщений.
+        """Callback-функция для получения сообщений.
 
         Args:
             message: входящее сообщение
@@ -46,7 +46,7 @@ class RabbitMQ(Broker):
         if self.msg_callback is None:
             return
 
-        notification = Notification.parse_raw(message.body.decode())
+        notification = Message.parse_raw(message.body.decode())
         await self.msg_callback(notification)
         await message.ack()
 

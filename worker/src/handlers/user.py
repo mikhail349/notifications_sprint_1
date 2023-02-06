@@ -1,6 +1,6 @@
 """Модуль обработчика событий пользователя."""
 from src.handlers.base import EventHandler
-from src.models.notification import Notification
+from src.models.message import Message
 from src.senders.base import Sender
 
 
@@ -9,7 +9,7 @@ class UserHandler(EventHandler):
 
     async def process(
         self,
-        msg: Notification,
+        msg: Message,
         sender: Sender,
     ):
         recipient = await self.data_storage.get_user(

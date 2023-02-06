@@ -3,7 +3,8 @@ import uuid
 from abc import ABC, abstractmethod
 from typing import Any, List
 
-from src.models.notification import DeliveryType, EventType, Notification
+from src.models.message import DeliveryType, EventType
+from src.storages.models.notification import Notification
 from src.storages.models.review import Review
 from src.storages.models.user import User
 

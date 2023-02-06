@@ -1,10 +1,12 @@
 """Модуль абстраткного обработчика событий."""
+import datetime
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Optional
 
-from src.models.notification import Notification
+from src.models.message import Message
 from src.senders.base import Sender
 from src.storages.base import DataStorage, NotificationStorage
+from src.storages.models.notification import Notification, Status
 from src.templaters.base import Templater
 
 
@@ -32,25 +34,40 @@ class EventHandler(ABC):
     @abstractmethod
     async def process(
         self,
-        msg: Notification,
+        msg: Message,
         sender: Sender,
     ) -> None:
-        """Обработать событие.
+        """Обработать сообщение.
 
         Args:
-            msg: уведомление
+            msg: сообщение
             sender: отпрвитель
 
         """
 
-    async def save_notification(self, notification: Notification) -> Any:
-        """Сохранить уведомление в БД.
+    async def save_message(
+        self,
+        msg: Message,
+        status: Status,
+        comments: Optional[str] = None,
+    ) -> Any:
+        """Сохранить сообщение в БД.
 
         Args:
-            notification: уведомление
+            msg: сообщение
+            status: статус отправки
+            comments: комментарий отправки
 
         Returns:
             Any: ИД созданного уведомления
 
         """
+        notification = Notification(
+            delivery_type=msg.delivery_type,
+            event_type=msg.event_type,
+            body=msg.body,
+            attempted_at=datetime.datetime.now(),
+            status=status,
+            comments=comments,
+        )
         return await self.notification_storage.add_notification(notification)
