@@ -6,7 +6,6 @@ class UserNotificationSettings(BaseModel):
     """Модель настроек уведомлений пользователя."""
 
     allow_email: bool
-    allow_sms: bool
 
 
 class User(BaseModel):

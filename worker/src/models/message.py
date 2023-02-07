@@ -8,7 +8,6 @@ class DeliveryType(str, enum.Enum):  # noqa: WPS600
     """Перечисление способов доставки."""
 
     EMAIL = 'email'
-    SMS = 'sms'
     WEB_SOCKET = 'websocket'
 
 

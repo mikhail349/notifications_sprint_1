@@ -70,17 +70,17 @@ class MockedTemplateStorage(TemplateStorage):
             }
             return emails[event_type]
 
-        def get_sms(event_type: EventType):  # noqa: WPS430
-            sms = {
+        def get_ws(event_type: EventType):  # noqa: WPS430
+            ws = {
                 EventType.USER_REGISTERED: """
                     Приветствуем Вас, {{ user.name }}!
                 """,
             }
-            return sms[event_type]
+            return ws[event_type]
 
         mapping = {
             DeliveryType.EMAIL: get_email,
-            DeliveryType.SMS: get_sms,
+            DeliveryType.WEB_SOCKET: get_ws,
         }
         return mapping[delivery_type](event_type)
 

@@ -9,7 +9,6 @@ from src.handlers.user import UserRegisteredHandler
 from src.models.message import DeliveryType, EventType, Message
 from src.senders.base import Sender
 from src.senders.email import EmailSender
-from src.senders.sms import SMSSender
 from src.senders.websocket import WebsocketSender
 from src.services.data_storage import create_data_storage
 from src.services.notification_storage import create_notification_storage
@@ -157,7 +156,6 @@ def init_senders(worker: Worker):
 
     """
     worker.add_sender(DeliveryType.EMAIL, EmailSender())
-    worker.add_sender(DeliveryType.SMS, SMSSender())
     worker.add_sender(DeliveryType.WEB_SOCKET, WebsocketSender())
 
 

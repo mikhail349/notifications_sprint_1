@@ -1,4 +1,4 @@
-"""Модуль классов отправителя SMS."""
+"""Модуль классов отправителя по web socket."""
 import logging
 from typing import Optional
 
