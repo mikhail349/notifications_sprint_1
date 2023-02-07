@@ -79,7 +79,7 @@ class Migration(migrations.Migration):
                     "periodicity",
                     models.CharField(
                         choices=[
-                            ("daily", "Dayly"),
+                            ("daily", "Daily"),
                             ("weekly", "Weekly"),
                             ("monthly", "Monthly"),
                         ],
