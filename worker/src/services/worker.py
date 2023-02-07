@@ -5,7 +5,7 @@ from src.brokers.base import Broker
 from src.handlers.admin import AdminHandler
 from src.handlers.base import EventHandler
 from src.handlers.review import ReviewHandler
-from src.handlers.user import UserHandler
+from src.handlers.user import UserRegisteredHandler
 from src.models.message import DeliveryType, EventType, Message
 from src.senders.base import Sender
 from src.senders.email import EmailSender
@@ -15,6 +15,7 @@ from src.services.data_storage import create_data_storage
 from src.services.notification_storage import create_notification_storage
 from src.services.template_storage import create_template_storage
 from src.services.templater import create_templater
+from src.services.url_shortener import create_url_shortener
 from src.storages.models.notification import Status
 
 
@@ -116,14 +117,16 @@ def init_handlers(worker: Worker):
     data_storage = create_data_storage()
     template_storage = create_template_storage()
     templater = create_templater()
+    url_shortener = create_url_shortener()
 
     worker.add_handler(
         EventType.USER_REGISTERED,
-        UserHandler(
+        UserRegisteredHandler(
             data_storage=data_storage,
             notification_storage=notification_storage,
             template_storage=template_storage,
             templater=templater,
+            url_shortener=url_shortener,
         ),
     )
     worker.add_handler(

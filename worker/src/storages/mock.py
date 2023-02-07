@@ -48,7 +48,12 @@ class MockedTemplateStorage(TemplateStorage):
                 EventType.USER_REGISTERED: """
                     <html>
                         <body>
-                            <div>Приветствуем Вас, {{ user.name }}!</div>
+                            <div>
+                                Приветствуем Вас, {{ user.name }}!
+                            </div>
+                            <a href="{{ link.confirm_email }}">
+                                Подтвердите почту
+                            </a>
                         </body>
                     </html>
                 """,
