@@ -5,8 +5,9 @@
 1. Установить зависимости ```pip install requirements.txt```
 2. Создать файл .env (по аналогии с .env.example)
 3. Собрать статические файлы ```python manage.py collectstatic --no-input```
-3. Применить миграции ```python manage.py migrate```
-4. Создать пользователя ```python manage.py createsuperuser```
+4. Применить миграции ```python manage.py migrate```
+5. Создать пользователя ```python manage.py createsuperuser```
+6. Запустить приложение ```python manage.py runserver```
 
 API:
 
