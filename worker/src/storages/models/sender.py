@@ -1,7 +1,7 @@
 """Модуль моделей отправителя."""
 from pydantic import BaseModel
 
-from src.models.notification import DeliveryType
+from src.models.message import DeliveryType
 
 
 class DeliverySender(BaseModel):
