@@ -4,7 +4,7 @@ services:
     user: "www-data:www-data"
     build: ./admin_panel
     env_file:
-      - ./.env
+      - ./admin_panel/.env
     depends_on:
       - postgresql
     volumes:
@@ -23,8 +23,9 @@ services:
 
   postgresql:
     image: postgres:13-alpine
-    env_file:
-      - ./.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgresql_data:/var/lib/postgresql/data
     ports:
