@@ -1,8 +1,22 @@
 """Модуль инициализации брокера."""
+from typing import List
+
 import aio_pika
 import backoff
 
+from src.brokers.base import Broker
+from src.brokers.rabbitmq import QueueType, RabbitMQ
 from src.config.rabbitmq import rabbitmq_settings
+
+
+async def create_brokers(
+    connection: aio_pika.abc.AbstractRobustConnection
+) -> List[Broker]:
+    brokers: List[Broker] = []
+    for queue_name in QueueType:
+        queue = await get_queue(connection, queue_name.value)
+        brokers.append(RabbitMQ(queue))
+    return brokers
 
 
 @backoff.on_exception(backoff.expo, exception=ConnectionError)
