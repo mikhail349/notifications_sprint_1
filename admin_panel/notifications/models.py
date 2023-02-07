@@ -33,7 +33,7 @@ class Periodicity(models.TextChoices):
     """Possible choices for delivery periodicity."""
 
     once = 'once'
-    dayly = 'daily'
+    daily = 'daily'
     weekly = 'weekly'
     monthly = 'monthly'
 
