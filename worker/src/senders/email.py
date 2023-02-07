@@ -3,6 +3,7 @@ import logging
 from typing import Optional
 
 from src.senders.base import Sender
+from src.senders import messages
 from src.storages.models.user import User
 
 
@@ -16,7 +17,7 @@ class EmailSender(Sender):
         subject: Optional[str] = None,
     ) -> None:
         if not recipient.notification_settings.allow_email:
-            return
+            raise Exception(messages.DELIVERY_TYPE_DISALLOWED)
 
         msg = """
             Письмо отправлено.
