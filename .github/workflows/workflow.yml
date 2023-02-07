@@ -25,7 +25,6 @@ jobs:
         run: |
           mkdir reports
       - name: Lint with flake8
-        continue-on-error: true
         id: flake
         run: |
           flake8 . --format=html --htmldir=./reports/flake
