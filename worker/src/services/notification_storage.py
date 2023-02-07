@@ -1,17 +1,18 @@
-"""Модуль подключения к хранилищу уведомлений."""
+"""Модуль инициализации хранилища уведомлений."""
 from bson.binary import UuidRepresentation
 from bson.codec_options import CodecOptions
 from motor import motor_asyncio
 
 from src.config.mongo import mongo_config
+from src.storages.base import NotificationStorage
 from src.storages.mongo import Collection, MongoNotificationStorage
 
 
-def create_notification_storage() -> MongoNotificationStorage:
-    """Создать хранилище уведомлений MongoDB.
+def create_notification_storage() -> NotificationStorage:
+    """Создать хранилище уведомлений.
 
     Returns:
-        MongoNotificationStorage: хранилище уведомлений MongoDB
+        NotificationStorage: хранилище уведомлений
 
     """
     url = 'mongodb://{username}:{password}@{host}:{port}'.format(

@@ -11,10 +11,11 @@ from src.senders.email import EmailSender
 from src.senders.sms import SMSSender
 from src.senders.websocket import WebsocketSender
 from src.services.broker import get_connection, get_queue
+from src.services.data_storage import create_data_storage
 from src.services.notification_storage import create_notification_storage
+from src.services.template_storage import create_template_storage
+from src.services.templater import create_templater
 from src.services.worker import Worker
-from src.storages import mock
-from src.templaters.jinja import Jinja2Templater
 
 
 def init_handlers(worker: Worker):
@@ -25,9 +26,9 @@ def init_handlers(worker: Worker):
 
     """
     notification_storage = create_notification_storage()
-    data_storage = mock.MockedDataStorage()
-    template_storage = mock.MockedTemplateStorage()
-    templater = Jinja2Templater()
+    data_storage = create_data_storage()
+    template_storage = create_template_storage()
+    templater = create_templater()
 
     worker.add_handler(
         EventType.USER_REGISTERED,
