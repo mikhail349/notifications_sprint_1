@@ -1,6 +1,5 @@
 """Administration panel."""
 from django.contrib import admin
-
 from notifications import models
 
 

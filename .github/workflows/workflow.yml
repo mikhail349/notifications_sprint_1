@@ -25,14 +25,13 @@ jobs:
         run: |
           mkdir reports
       - name: Lint with flake8
-        continue-on-error: true
         id: flake
         run: |
           flake8 . --format=html --htmldir=./reports/flake
       - name: Analysing code with mypy
         id: mypy
         run: |
-          mypy . --html-report ./reports/mypy
+          mypy admin_panel --html-report ./reports/mypy/admin_panel
       - name: Run tests
         id: pytest
         run: |
