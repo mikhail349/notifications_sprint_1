@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 wemake-python-styleguide flake8-html mypy lxml pytest pytest-html
+          pip install flake8 wemake-python-styleguide flake8-html mypy lxml django-stubs pytest pytest-html
       - name: Create reports folder
         run: |
           mkdir reports
