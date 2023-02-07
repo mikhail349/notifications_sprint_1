@@ -2,8 +2,7 @@
 import asyncio
 import logging
 
-
-from src.services.broker import get_connection, create_brokers
+from src.services.broker import create_brokers, get_connection
 from src.services.worker import create_worker
 
 

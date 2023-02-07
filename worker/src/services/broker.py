@@ -10,8 +10,17 @@ from src.config.rabbitmq import rabbitmq_settings
 
 
 async def create_brokers(
-    connection: aio_pika.abc.AbstractRobustConnection
+    connection: aio_pika.abc.AbstractRobustConnection,
 ) -> List[Broker]:
+    """Создать брокеров.
+
+    Args:
+        connection: соединение с RabbitMQ
+
+    Returns:
+        List[Broker]: список брокеров
+
+    """
     brokers: List[Broker] = []
     for queue_name in QueueType:
         queue = await get_queue(connection, queue_name.value)
