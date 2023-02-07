@@ -10,9 +10,9 @@ from src.models.message import DeliveryType, EventType, Message
 from src.senders.base import Sender
 from src.senders.email import EmailSender
 from src.senders.websocket import WebsocketSender
+from src.services.config_storage import create_config_storage
 from src.services.data_storage import create_data_storage
 from src.services.notification_storage import create_notification_storage
-from src.services.template_storage import create_template_storage
 from src.services.templater import create_templater
 from src.services.url_shortener import create_url_shortener
 from src.storages.models.notification import Status
@@ -114,7 +114,7 @@ def init_handlers(worker: Worker):
     """
     notification_storage = create_notification_storage()
     data_storage = create_data_storage()
-    template_storage = create_template_storage()
+    config_storage = create_config_storage()
     templater = create_templater()
     url_shortener = create_url_shortener()
 
@@ -123,7 +123,7 @@ def init_handlers(worker: Worker):
         UserRegisteredHandler(
             data_storage=data_storage,
             notification_storage=notification_storage,
-            template_storage=template_storage,
+            config_storage=config_storage,
             templater=templater,
             url_shortener=url_shortener,
         ),
@@ -133,7 +133,7 @@ def init_handlers(worker: Worker):
         ReviewHandler(
             data_storage=data_storage,
             notification_storage=notification_storage,
-            template_storage=template_storage,
+            config_storage=config_storage,
             templater=templater,
         ),
     )
@@ -142,7 +142,7 @@ def init_handlers(worker: Worker):
         AdminHandler(
             data_storage=data_storage,
             notification_storage=notification_storage,
-            template_storage=template_storage,
+            config_storage=config_storage,
             templater=templater,
         ),
     )

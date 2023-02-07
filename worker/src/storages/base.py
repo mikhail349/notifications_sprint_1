@@ -1,4 +1,5 @@
 """Модуль абстрактных хранилищ."""
+import enum
 import uuid
 from abc import ABC, abstractmethod
 from typing import Any, List
@@ -7,6 +8,13 @@ from src.models.message import DeliveryType, EventType
 from src.storages.models.notification import Notification
 from src.storages.models.review import Review
 from src.storages.models.user import User
+
+
+class URLType(enum.Enum):
+    """Типы URL."""
+
+    CONFIRM_EMAIL_URL = 'confirm_email_url'
+    REDIRECT_URL = 'redirect_url'
 
 
 class DataStorage(ABC):
@@ -77,8 +85,20 @@ class NotificationStorage(ABC):
         """
 
 
-class TemplateStorage(ABC):
-    """Абстрактный класс хранилища шаблонов."""
+class ConfigStorage(ABC):
+    """Абстрактный класс хранилища настроек."""
+
+    @abstractmethod
+    async def get_url(self, url_type: URLType) -> str:
+        """Получить URL по ключу.
+
+        Args:
+            url_type: ключ URL
+
+        Returns:
+            str: URL
+
+        """
 
     @abstractmethod
     async def get_template(

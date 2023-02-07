@@ -3,14 +3,14 @@ import uuid
 from typing import Any, List
 
 from src.models.message import DeliveryType, EventType
-from src.storages.base import DataStorage, NotificationStorage, TemplateStorage
+from src.storages import base
 from src.storages.models import factory
 from src.storages.models.notification import Notification
 from src.storages.models.review import Review
 from src.storages.models.user import User
 
 
-class MockedDataStorage(DataStorage):
+class MockedDataStorage(base.DataStorage):
     """Класс имитации хранилища данных."""
 
     async def get_user(self, username: str) -> User:
@@ -28,15 +28,26 @@ class MockedDataStorage(DataStorage):
         ]
 
 
-class MockedNotificationStorage(NotificationStorage):
+class MockedNotificationStorage(base.NotificationStorage):
     """Класс имитации хранилища уведомлений."""
 
     async def add_notification(self, notification: Notification) -> Any:
         return factory.create_random_id()
 
 
-class MockedTemplateStorage(TemplateStorage):
-    """Класс имитации хранилища шаблонов."""
+class MockedConfigStorage(base.ConfigStorage):
+    """Класс имитации хранилища настроек."""
+
+    async def get_url(self, url_type: base.URLType) -> str:
+        mapping = {
+            base.URLType.CONFIRM_EMAIL_URL: """
+                https://www.auth.ru/confirm_email/
+            """,
+            base.URLType.REDIRECT_URL: """
+                https://www.online-cinema.ru/welcome/
+            """,
+        }
+        return mapping[url_type]
 
     async def get_template(
         self,

@@ -17,7 +17,7 @@ class AdminHandler(EventHandler):
         recipients = await self.data_storage.get_users_by_cohort(
             cohort=msg.body['cohort'],
         )
-        template = await self.template_storage.get_template_by_id(
+        template = await self.config_storage.get_template_by_id(
             id=uuid.UUID(msg.body['template_id']),
         )
 

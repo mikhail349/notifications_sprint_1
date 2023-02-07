@@ -5,7 +5,7 @@ from typing import Any, Optional
 
 from src.models.message import Message
 from src.senders.base import Sender
-from src.storages.base import DataStorage, NotificationStorage, TemplateStorage
+from src.storages.base import ConfigStorage, DataStorage, NotificationStorage
 from src.storages.models.notification import Notification, Status
 from src.templaters.base import Templater
 
@@ -17,7 +17,7 @@ class EventHandler(ABC):
         self,
         data_storage: DataStorage,
         notification_storage: NotificationStorage,
-        template_storage: TemplateStorage,
+        config_storage: ConfigStorage,
         templater: Templater,
     ) -> None:
         """Инициализировать обработчик событий.
@@ -25,13 +25,13 @@ class EventHandler(ABC):
         Args:
             data_storage: хранилище данных
             notification_storage: хранилище уведомлений
-            template_storage: хранилище шаблонов
+            config_storage: хранилище настроек
             templater: шаблнизатор
 
         """
         self.data_storage = data_storage
         self.notification_storage = notification_storage
-        self.template_storage = template_storage
+        self.config_storage = config_storage
         self.templater = templater
 
     @abstractmethod
