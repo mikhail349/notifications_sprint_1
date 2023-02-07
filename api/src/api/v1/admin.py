@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Response
 
 from src.api.v1.models.admin import AdminEvent
 from src.brokers.base import Broker
-from src.models.base import EventType, Notification
+from src.models.base import EventType, Message
 from src.services import broker
 
 router = APIRouter(prefix='/admin', tags=['Админ-панель'])
@@ -29,10 +29,10 @@ async def post_admin_event(
         Response: http ответ
 
     """
-    notification = Notification(
+    message = Message(
         delivery_type=admin_event.delivery_type,
         event_type=EventType.ADMIN,
         body=admin_event.body,
     )
-    await broker.post(notification)
+    await broker.post(priority=admin_event.priority, message=message)
     return Response(status_code=HTTPStatus.OK)

@@ -11,8 +11,8 @@ from src.models.message import Message
 class QueueType(enum.Enum):
     """Перечисление очередей."""
 
-    LOW_PRIORITY = 'low_priority'
-    HIGH_PRIORITY = 'high_priority'
+    LOW = 'low'
+    HIGH = 'high'
 
 
 class RabbitMQ(Broker):

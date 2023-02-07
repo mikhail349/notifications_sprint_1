@@ -4,11 +4,10 @@ import enum
 from pydantic import BaseModel
 
 
-class DeliveryType(enum.Enum):
+class DeliveryType(str, enum.Enum):  # noqa: WPS600
     """Перечисление способов доставки."""
 
     EMAIL = 'email'
-    SMS = 'sms'
     WEB_SOCKET = 'websocket'
 
 
@@ -20,8 +19,15 @@ class EventType(enum.Enum):
     ADMIN = 'admin-reporting.v1.event'
 
 
-class Notification(BaseModel):
-    """Модель базового уведомления."""
+class PriorityType(enum.Enum):
+    """Перечисление приоритетов."""
+
+    LOW = 'low'
+    HIGH = 'high'
+
+
+class Message(BaseModel):
+    """Модель базового сообщения."""
 
     delivery_type: DeliveryType
     event_type: EventType

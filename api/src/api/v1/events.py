@@ -4,9 +4,9 @@ from http import HTTPStatus
 from fastapi import APIRouter, Depends, Response
 
 from src.api.v1.models.review import ReviewRatingEvent
-from src.api.v1.models.user import User
+from src.api.v1.models.user import UserEvent
 from src.brokers.base import Broker
-from src.models.base import DeliveryType, EventType, Notification
+from src.models.base import EventType, Message
 from src.services import broker
 
 router = APIRouter(prefix='/events', tags=['События'])
@@ -27,12 +27,15 @@ async def post_review_rating(
         Response: http ответ
 
     """
-    notification = Notification(
+    message = Message(
         delivery_type=review_rating_event.delivery_type,
         event_type=EventType.REVIEW_RATED,
         body=review_rating_event.body,
     )
-    await broker.post(notification)
+    await broker.post(
+        priority=review_rating_event.priority,
+        message=message,
+    )
     return Response(status_code=HTTPStatus.OK)
 
 
@@ -41,23 +44,23 @@ async def post_review_rating(
     summary='Событие регистрации нового пользователя',
 )
 async def post_user_registered(
-    user: User,
+    user_event: UserEvent,
     broker: Broker = Depends(broker.get_broker),  # noqa: WPS404, B008
 ) -> Response:
     """Отправить событие регистрации нового пользователя.
 
     Args:
-        user: модель пользователя `User`
+        user_event: модель события пользователя `UserEvent`
         broker: брокер сообщений
 
     Returns:
         Response: http ответ
 
     """
-    notification = Notification(
-        delivery_type=DeliveryType.EMAIL,
+    message = Message(
+        delivery_type=user_event.delivery_type,
         event_type=EventType.USER_REGISTERED,
-        body=user,
+        body=user_event.body,
     )
-    await broker.post(notification)
+    await broker.post(priority=user_event.priority, message=message)
     return Response(status_code=HTTPStatus.OK)
