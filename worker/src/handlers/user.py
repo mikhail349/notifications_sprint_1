@@ -15,7 +15,7 @@ class UserHandler(EventHandler):
         recipient = await self.data_storage.get_user(
             username=msg.body['username'],
         )
-        template = await self.notification_storage.get_template(
+        template = await self.template_storage.get_template(
             delivery_type=msg.delivery_type,
             event_type=msg.event_type,
         )

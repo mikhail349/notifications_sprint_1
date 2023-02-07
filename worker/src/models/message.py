@@ -4,7 +4,7 @@ import enum
 from pydantic import BaseModel
 
 
-class DeliveryType(enum.Enum):
+class DeliveryType(str, enum.Enum):  # noqa: WPS600
     """Перечисление способов доставки."""
 
     EMAIL = 'email'
@@ -12,7 +12,7 @@ class DeliveryType(enum.Enum):
     WEB_SOCKET = 'websocket'
 
 
-class EventType(enum.Enum):
+class EventType(str, enum.Enum):  # noqa: WPS600
     """Перечисление типов событий."""
 
     REVIEW_RATED = 'review-reporting.v1.rated'

@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from src.models.message import DeliveryType, EventType
 
 
-class Status(enum.Enum):
+class Status(str, enum.Enum):  # noqa: WPS600
     """Статус уведомления."""
 
     SUCCESS = 'success'

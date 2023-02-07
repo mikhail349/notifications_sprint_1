@@ -11,9 +11,10 @@ from src.senders.email import EmailSender
 from src.senders.sms import SMSSender
 from src.senders.websocket import WebsocketSender
 from src.services.broker import get_connection, get_queue
-from src.storages.mock import MockedDataStorage, MockedNotificationStorage
+from src.services.notification_storage import create_notification_storage
+from src.services.worker import Worker
+from src.storages import mock
 from src.templaters.jinja import Jinja2Templater
-from src.worker import Worker
 
 
 def init_handlers(worker: Worker):
@@ -23,8 +24,9 @@ def init_handlers(worker: Worker):
         worker: Воркер
 
     """
-    notification_storage = MockedNotificationStorage()
-    data_storage = MockedDataStorage()
+    notification_storage = create_notification_storage()
+    data_storage = mock.MockedDataStorage()
+    template_storage = mock.MockedTemplateStorage()
     templater = Jinja2Templater()
 
     worker.add_handler(
@@ -32,6 +34,7 @@ def init_handlers(worker: Worker):
         UserHandler(
             data_storage=data_storage,
             notification_storage=notification_storage,
+            template_storage=template_storage,
             templater=templater,
         ),
     )
@@ -40,6 +43,7 @@ def init_handlers(worker: Worker):
         ReviewHandler(
             data_storage=data_storage,
             notification_storage=notification_storage,
+            template_storage=template_storage,
             templater=templater,
         ),
     )
@@ -48,6 +52,7 @@ def init_handlers(worker: Worker):
         AdminHandler(
             data_storage=data_storage,
             notification_storage=notification_storage,
+            template_storage=template_storage,
             templater=templater,
         ),
     )

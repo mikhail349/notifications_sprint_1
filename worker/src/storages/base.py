@@ -76,6 +76,10 @@ class NotificationStorage(ABC):
 
         """
 
+
+class TemplateStorage(ABC):
+    """Абстрактный класс хранилища шаблонов."""
+
     @abstractmethod
     async def get_template(
         self,
