@@ -1,4 +1,5 @@
 """Модуль RabbitMQ."""
+import asyncio
 import enum
 from typing import Optional
 
@@ -23,14 +24,20 @@ class RabbitMQ(Broker):
 
     """
 
-    def __init__(self, queue: aio_pika.abc.AbstractQueue) -> None:
+    def __init__(
+        self,
+        queue: aio_pika.abc.AbstractQueue,
+        consumption_delay: int
+    ) -> None:
         """Инициализировать класс RabbitMQ.
 
         Args:
             queue: очередь `AbstractQueue`
+            consumption_delay: задержка при чтении очереди, секунд.
 
         """
         self.queue = queue
+        self.consumption_delay = consumption_delay
         self.msg_callback: Optional[MsgCallback] = None
 
     async def on_message(
@@ -43,6 +50,8 @@ class RabbitMQ(Broker):
             message: входящее сообщение
 
         """
+        await asyncio.sleep(self.consumption_delay)
+
         if self.msg_callback is None:
             return
 

@@ -5,6 +5,8 @@ from src.config.base import BaseConfig
 
 DEFAULT_PORT = 5672
 """Порт подключения по умолчанию."""
+DEFAULT_CONSUMPTION_DELAY = 1
+"""Задержка при чтении очереди по умолчанию, секунд."""
 
 
 class RabbitMQSettings(BaseConfig):
@@ -18,6 +20,11 @@ class RabbitMQSettings(BaseConfig):
     """Хост."""
     port: int = Field(DEFAULT_PORT, env='RABBITMQ_PORT')
     """Порт."""
+    consumption_delay: int = Field(
+        default=DEFAULT_CONSUMPTION_DELAY,
+        env='RABBITMQ_CONSUMPTION_DELAY'
+    )
+    """Задержка при чтении очереди, секунд."""
 
 
 rabbitmq_settings = RabbitMQSettings()

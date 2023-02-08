@@ -3,6 +3,7 @@ from typing import List
 
 import aio_pika
 import backoff
+from pamqp.exceptions import AMQPFrameError
 
 from src.brokers.base import Broker
 from src.brokers.rabbitmq import QueueType, RabbitMQ
@@ -24,11 +25,11 @@ async def create_brokers(
     brokers: List[Broker] = []
     for queue_name in QueueType:
         queue = await get_queue(connection, queue_name.value)
-        brokers.append(RabbitMQ(queue))
+        brokers.append(RabbitMQ(queue, rabbitmq_settings.consumption_delay))
     return brokers
 
 
-@backoff.on_exception(backoff.expo, exception=ConnectionError)
+@backoff.on_exception(backoff.expo, exception=(ConnectionError, AMQPFrameError))
 async def get_connection() -> aio_pika.abc.AbstractRobustConnection:
     """Получить соединение с RabbitMQ.
 

@@ -3,6 +3,7 @@ from typing import Union
 
 import aio_pika
 import backoff
+from pamqp.exceptions import AMQPFrameError
 
 from src.brokers.base import Broker
 from src.brokers.rabbitmq import RabbitMQ
@@ -13,7 +14,7 @@ broker: Union[Broker, None] = None
 connection: Union[aio_pika.abc.AbstractConnection, None] = None
 
 
-@backoff.on_exception(backoff.expo, exception=ConnectionError)
+@backoff.on_exception(backoff.expo, exception=(ConnectionError, AMQPFrameError))
 async def connect() -> None:
     """Подключиться к брокеру."""
     global broker, connection  # noqa: WPS100, WPS420
