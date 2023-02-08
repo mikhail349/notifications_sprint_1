@@ -16,7 +16,7 @@ class UUIDMixin(models.Model):
         abstract = True
 
 
-class Chanel(models.TextChoices):
+class Channel(models.TextChoices):
     """Possible choices for transfer channels."""
 
     email = 'email'
@@ -43,8 +43,8 @@ class Template(UUIDMixin):
 
     name = models.CharField('name', max_length=255)  # noqa: WPS432
     description = models.TextField('description', blank=True, null=True)
-    chanel = models.CharField(
-        choices=Chanel.choices,
+    channel = models.CharField(
+        choices=Channel.choices,
         max_length=50,   # noqa: WPS432
     )
     subject = models.TextField(blank=True, null=True)
