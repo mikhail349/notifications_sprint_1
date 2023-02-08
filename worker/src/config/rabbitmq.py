@@ -22,7 +22,7 @@ class RabbitMQSettings(BaseConfig):
     """Порт."""
     consumption_delay: int = Field(
         default=DEFAULT_CONSUMPTION_DELAY,
-        env='RABBITMQ_CONSUMPTION_DELAY'
+        env='RABBITMQ_CONSUMPTION_DELAY',
     )
     """Задержка при чтении очереди, секунд."""
 

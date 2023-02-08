@@ -29,7 +29,10 @@ async def create_brokers(
     return brokers
 
 
-@backoff.on_exception(backoff.expo, exception=(ConnectionError, AMQPFrameError))
+@backoff.on_exception(
+    backoff.expo,
+    exception=(ConnectionError, AMQPFrameError),
+)
 async def get_connection() -> aio_pika.abc.AbstractRobustConnection:
     """Получить соединение с RabbitMQ.
 

@@ -27,7 +27,7 @@ class RabbitMQ(Broker):
     def __init__(
         self,
         queue: aio_pika.abc.AbstractQueue,
-        consumption_delay: int
+        consumption_delay: int,
     ) -> None:
         """Инициализировать класс RabbitMQ.
 

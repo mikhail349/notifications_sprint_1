@@ -14,7 +14,10 @@ broker: Union[Broker, None] = None
 connection: Union[aio_pika.abc.AbstractConnection, None] = None
 
 
-@backoff.on_exception(backoff.expo, exception=(ConnectionError, AMQPFrameError))
+@backoff.on_exception(
+    backoff.expo,
+    exception=(ConnectionError, AMQPFrameError),
+)
 async def connect() -> None:
     """Подключиться к брокеру."""
     global broker, connection  # noqa: WPS100, WPS420
