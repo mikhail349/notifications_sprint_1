@@ -19,7 +19,7 @@ RUN groupadd -r app \
 
 USER app
 
-EXPOSE 8000
+EXPOSE 5000
 
 CMD ["gunicorn", "src.main:app", "--worker-class", \
-     "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+     "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:5000"]
