@@ -11,6 +11,10 @@
 
 API:
 
-/api/v1/templates/<template_id>: возвращает шаблон сообщения
+/api/v1/templates/<template_id>/: возвращает шаблон сообщения
 
 {"template": ...}
+
+api/v1/configs/<config_name>/: возвращает значение конфигурации
+
+{"<config_name>": ...}

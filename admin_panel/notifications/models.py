@@ -93,3 +93,11 @@ class ScheduledMailing(UUIDMixin):
             name
         """
         return self.name
+
+
+class Configuration(UUIDMixin):
+    """Model to keep configurations for notifications."""
+
+    name = models.SlugField('name', max_length=255)  # noqa: WPS432
+    config_value = models.CharField('value', max_length=255)  # noqa: WPS432
+    description = models.TextField('description', blank=True, null=True)
