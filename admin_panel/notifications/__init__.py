@@ -1,0 +1,1 @@
+"""Notifications admin panel app."""
