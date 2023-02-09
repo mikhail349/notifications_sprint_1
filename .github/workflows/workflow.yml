@@ -31,6 +31,8 @@ jobs:
       - name: Analysing code with mypy
         id: mypy
         run: |
+          mypy api --ignore-missing-imports --follow-imports=skip --html-report ./reports/mypy/api
+          mypy worker --ignore-missing-imports --follow-imports=skip --html-report ./reports/mypy/worker
           mypy admin_panel --html-report ./reports/mypy/admin_panel
       - name: Run tests
         id: pytest

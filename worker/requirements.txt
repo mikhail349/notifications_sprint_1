@@ -1,0 +1,9 @@
+pydantic==1.9.0
+python-dotenv==0.21.0
+wemake-python-styleguide==0.17.0
+aio-pika==8.3.0
+backoff==2.2.1
+Faker==16.6.1
+Jinja2==3.1.2
+motor==3.1.1
+PyJWT==2.6.0
