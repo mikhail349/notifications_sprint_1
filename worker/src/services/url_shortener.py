@@ -1,6 +1,7 @@
 """Модуль инициализации укорачивателя ссылок."""
+from src.config.bitly import bitly_settings
 from src.url_shorteners.base import URLShortener
-from src.url_shorteners.mock import MockedURLShortener
+from src.url_shorteners.bitly import BitlyURLShortener
 
 
 def create_url_shortener() -> URLShortener:
@@ -10,4 +11,4 @@ def create_url_shortener() -> URLShortener:
         URLShortener: укорачиватель ссылок
 
     """
-    return MockedURLShortener()
+    return BitlyURLShortener(**bitly_settings.dict())
