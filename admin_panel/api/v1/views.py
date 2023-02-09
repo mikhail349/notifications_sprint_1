@@ -6,6 +6,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
+
 from notifications.models import Configuration, Template
 
 
@@ -35,5 +36,8 @@ def get_config_value(request: WSGIRequest, config_name: str) -> JsonResponse:
     Returns:
         JsonResponse
     """
-    config_value = get_object_or_404(Configuration, name=config_name).value
+    config_value = get_object_or_404(
+        Configuration,
+        name=config_name,
+    ).config_value
     return JsonResponse({config_name: config_value})
