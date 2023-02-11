@@ -14,6 +14,9 @@ COPY requirements.txt requirements.txt
 RUN  pip install --upgrade pip \
      && pip install -r requirements.txt --no-cache-dir
 
+RUN apt-get update \
+     && apt install -y netcat
+
 COPY --chown=www-data:www-data . .
 
 RUN mkdir /admin_panel/staticfiles \
@@ -23,4 +26,6 @@ USER www-data
 
 EXPOSE 8000
 
-CMD ["uwsgi", "uwsgi.ini"]
+RUN chmod +x entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
