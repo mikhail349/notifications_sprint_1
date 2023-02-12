@@ -8,10 +8,10 @@ from src.handlers.review import ReviewHandler
 from src.handlers.user import UserRegisteredHandler
 from src.models.message import DeliveryType, EventType, Message
 from src.senders.base import Sender
-from src.senders.email import EmailSender
 from src.senders.websocket import WebsocketSender
 from src.services.config_storage import create_config_storage
 from src.services.data_storage import create_data_storage
+from src.services.email_sender import create_email_sender
 from src.services.notification_storage import create_notification_storage
 from src.services.templater import create_templater
 from src.services.url_shortener import create_url_shortener
@@ -155,7 +155,7 @@ def init_senders(worker: Worker):
         worker: Воркер
 
     """
-    worker.add_sender(DeliveryType.EMAIL, EmailSender())
+    worker.add_sender(DeliveryType.EMAIL, create_email_sender())
     worker.add_sender(DeliveryType.WEB_SOCKET, WebsocketSender())
 
 

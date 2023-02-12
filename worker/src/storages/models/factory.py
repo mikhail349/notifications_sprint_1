@@ -40,11 +40,15 @@ def create_user_notification_settings(
     )
 
 
-def create_user(username: Optional[str] = None) -> User:
+def create_user(
+    username: Optional[str] = None,
+    email: Optional[str] = None,
+) -> User:
     """Создать рандомного пользователя.
 
     Args:
         username: имя пользователя. Если None - сгенерировать
+        email: эл. почта. Если None - сгенерировать
 
     Returns:
         User: пользователь
@@ -53,7 +57,7 @@ def create_user(username: Optional[str] = None) -> User:
     return User(
         username=username or faker.simple_profile()['username'],
         name=faker.name(),
-        email=faker.email(),
+        email=email or faker.email(),
         phone_number=faker.phone_number(),
         notification_settings=create_user_notification_settings(
             allow_email=True,
