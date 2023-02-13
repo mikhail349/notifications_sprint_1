@@ -69,6 +69,7 @@ services:
     ports:
       - "80:80"
       - "8080:8080"
+      - "8888:8888"
 
   postgresql:
     image: postgres:13-alpine
