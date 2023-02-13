@@ -47,8 +47,8 @@ class PostgresStorage(Storage):
         """
         query = (
             'SELECT ns.id, ns.next_planned_date, ns.periodicity, ' +
-            'ns.user_group, ns.template_id, nt.subject, nt.channel ' +
-            'FROM notifications_scheduledmailing AS ns ' +
+            'ns.user_group, ns.template_id, nt.subject, nt.channel, ' +
+            'ns.priority FROM notifications_scheduledmailing AS ns ' +
             'JOIN notifications_template AS nt ' +
             'ON ns.template_id = nt.id WHERE next_planned_date <= %s'
         )

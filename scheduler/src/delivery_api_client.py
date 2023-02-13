@@ -17,7 +17,7 @@ class DeliveryAPIClient(object):
         self.port = port
         self.admin_endpoint = '/admin/'
 
-    def send(self, delivery_type, cohort, template_id, subject):
+    def send(self, delivery_type, cohort, template_id, subject, priority):
         """Отправить запланированную рассылку на обработку.
 
         Args:
@@ -25,12 +25,14 @@ class DeliveryAPIClient(object):
             cohort: группа юзеров
             template_id: идентефикатор шаблона
             subject: тема
+            priority: приоритет
 
         Returns:
             requests.Response
         """
         body = {
             'delivery_type': delivery_type,
+            'priority': priority,
             'body': {
                 'cohort': cohort,
                 'template_id': template_id,

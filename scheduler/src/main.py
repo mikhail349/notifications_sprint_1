@@ -51,10 +51,11 @@ if __name__ == '__main__':
             )
 
             response = api_client.send(
-                delivery_type=admin_event.channel,
+                delivery_type=admin_event.channel.value,
                 cohort=admin_event.user_group,
                 template_id=admin_event.template_id,
                 subject=admin_event.subject,
+                priority=admin_event.priority.value,
             )
             if response.status_code == http.HTTPStatus.OK:
                 storage.update_processed_notifications(

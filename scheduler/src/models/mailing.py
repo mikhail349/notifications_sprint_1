@@ -22,6 +22,13 @@ class Channel(enum.Enum):
     websocket = 'websocket'
 
 
+class Priority(enum.Enum):
+    """Значения приоритетов рассылок."""
+
+    low = 'low'
+    high = 'high'
+
+
 class AdminEvent(BaseModel):
     """Модель рассылки, настроенной в панели администратора."""
 
@@ -31,4 +38,5 @@ class AdminEvent(BaseModel):
     subject: str
     channel: Channel
     periodicity: Periodicity
+    priority: Priority
     next_planned_date: datetime
