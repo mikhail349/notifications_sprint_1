@@ -35,6 +35,8 @@ services:
     env_file:
       - ./ws/.env
     restart: always
+    volumes:
+      - ${HOST_JWT_PUBLIC_KEY_PATH}:${JWT_PUBLIC_KEY_PATH}:ro
 
   worker:
     build: ./worker

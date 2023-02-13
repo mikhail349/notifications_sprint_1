@@ -19,7 +19,7 @@ RUN groupadd -r app \
 
 USER app
 
-EXPOSE 8080
+EXPOSE 8081
 
 CMD ["gunicorn", "src.main:app", "--worker-class", \
-     "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8080"]
+     "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8081"]
