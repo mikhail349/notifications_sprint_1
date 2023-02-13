@@ -6,7 +6,7 @@ class URLShortener(ABC):
     """Абстрактный класс укорачивателя ссылок."""
 
     @abstractmethod
-    def shorten(self, url: str) -> str:
+    async def shorten(self, url: str) -> str:
         """Укоротить ссылку.
 
         Args:

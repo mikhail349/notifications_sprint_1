@@ -31,9 +31,9 @@ class UserRegisteredHandler(URLShortenerMixin, EventHandler):
             jwt_config.secret,
             algorithm=jwt_config.algorithm,
         )
-        return """
-            {confirm_email_url}?token={token}&redirect_url={redirect_url}
-        """.format(
+        return (
+            '{confirm_email_url}?token={token}&redirect_url={redirect_url}'
+        ).format(
             confirm_email_url=confirm_email_url,
             token=token,
             redirect_url=urllib_parse.quote(redirect_url),
@@ -50,7 +50,7 @@ class UserRegisteredHandler(URLShortenerMixin, EventHandler):
         confirm_email_url = await self.get_email_confirmation_url(
             username=recipient.username,
         )
-        short_url = self.url_shortener.shorten(confirm_email_url)
+        short_url = await self.url_shortener.shorten(confirm_email_url)
         template = await self.config_storage.get_template(
             delivery_type=msg.delivery_type,
             event_type=msg.event_type,
