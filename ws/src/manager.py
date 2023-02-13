@@ -17,7 +17,7 @@ class Manager(object):
         await ws.accept()
 
     def disconnect(self, username: str) -> None:
-        del self.clients[username]
+        del self.clients[username]  # noqa: WPS100
 
     async def send(self, username: str, text: str) -> None:
         ws = self.clients.get(username)
@@ -30,7 +30,7 @@ manager: Optional[Manager] = None
 
 def init_manager():
     """Инициализировать менеджер."""
-    global manager
+    global manager  # noqa: WPS100
     manager = Manager()
 
 
@@ -43,7 +43,7 @@ def get_manager() -> Manager:
     Raises:
         ValueError: Manager is None
     """
-    global manager
+    global manager  # noqa: WPS100
     if manager is None:
         raise ValueError('Manager is not initialized.')
     return manager
