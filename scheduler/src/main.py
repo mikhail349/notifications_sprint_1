@@ -19,21 +19,16 @@ def get_next_date(current_planed_date, periodicity):  # noqa: WPS231
 
     Returns:
         дата следующей рассылки
-
-    Raises:
-        ValueError: некорректная периодичность
     """
     if periodicity == Periodicity.once.value:
-        new_date = None
-    elif periodicity == Periodicity.daily.value:
-        new_date = current_planed_date + relativedelta(days=1)
-    elif periodicity == Periodicity.weekly.value:
-        new_date = current_planed_date + relativedelta(weeks=1)
-    elif periodicity == Periodicity.monthly.value:
-        new_date = current_planed_date + relativedelta(months=1)
-    else:
-        raise ValueError()
-    return new_date
+        return None
+    mapping = {
+        Periodicity.daily.value: 'days',
+        Periodicity.weekly.value: 'weeks',
+        Periodicity.monthly.value: 'months',
+    }
+    kwargs = {mapping[periodicity]: 1}
+    return current_planed_date + relativedelta(**kwargs)
 
 
 storage = PostgresStorage(PSQLSettings().dict())
