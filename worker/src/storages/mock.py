@@ -46,12 +46,10 @@ class MockedConfigStorage(base.ConfigStorage):
 
     async def get_url(self, url_type: base.URLType) -> str:
         mapping = {
-            base.URLType.CONFIRM_EMAIL_URL: """
-                https://www.auth.ru/confirm_email/
-            """,
-            base.URLType.REDIRECT_URL: """
-                https://www.online-cinema.ru/welcome/
-            """,
+            base.URLType.CONFIRM_EMAIL_URL:
+                'https://www.auth.ru/confirm_email/',
+            base.URLType.REDIRECT_URL:
+                'https://www.online-cinema.ru/welcome/',
         }
         return mapping[url_type]
 
