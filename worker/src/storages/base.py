@@ -2,7 +2,7 @@
 import enum
 import uuid
 from abc import ABC, abstractmethod
-from typing import Any, List
+from typing import Any, List, Tuple
 
 from src.models.message import DeliveryType, EventType
 from src.storages.models.notification import Notification
@@ -65,6 +65,19 @@ class DataStorage(ABC):
 
         Returns:
             List[User]: список пользователей `User`
+
+        """
+
+    @abstractmethod
+    async def login(self, username: str, password: str) -> Tuple[str, str]:
+        """Получить пару access- и refresh-токенов.
+
+        Args:
+            username: логин
+            password: пароль
+
+        Returns:
+            Tuple[str, str]: access- и refresh-токены
 
         """
 

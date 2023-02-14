@@ -1,5 +1,9 @@
 version: '3'
 services:
+  redis:
+    image: redis:alpine
+    restart: always
+
   rabbitmq:
     image: rabbitmq:3-alpine
     restart: always
@@ -25,6 +29,14 @@ services:
     restart: always
     depends_on:
       - rabbitmq
+
+  ws:
+    build: ./ws
+    env_file:
+      - ./ws/.env
+    restart: always
+    volumes:
+      - ${HOST_JWT_PUBLIC_KEY_PATH}:${JWT_PUBLIC_KEY_PATH}:ro
 
   worker:
     build: ./worker
@@ -66,6 +78,7 @@ services:
     ports:
       - "80:80"
       - "8080:8080"
+      - "8888:8888"
 
   postgresql:
     image: postgres:13-alpine

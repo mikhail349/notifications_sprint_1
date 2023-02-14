@@ -7,4 +7,5 @@ Faker==16.6.1
 Jinja2==3.1.2
 motor==3.1.1
 PyJWT==2.6.0
+websockets==10.4
 aiohttp==3.8.3

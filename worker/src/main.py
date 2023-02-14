@@ -12,7 +12,7 @@ async def main():
 
     async with await get_connection() as conn:
         for broker in await create_brokers(conn):
-            worker = create_worker(broker)
+            worker = await create_worker(broker)
             await worker.run()
 
         logging.info('Waiting for messages. To exit press CTRL+C')

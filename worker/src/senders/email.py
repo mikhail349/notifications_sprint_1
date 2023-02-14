@@ -1,7 +1,6 @@
 """Модуль классов отправителя email."""
 import smtplib
 from email.message import EmailMessage
-from typing import Optional
 
 from src.senders import errors, messages
 from src.senders.base import Sender
@@ -45,7 +44,7 @@ class EmailSender(Sender):
         self,
         recipient: User,
         text: str,
-        subject: Optional[str] = None,
+        **options,
     ) -> None:
         if not recipient.notification_settings.allow_email:
             raise errors.DeliveryNotAllowedError(
@@ -55,7 +54,7 @@ class EmailSender(Sender):
         msg = EmailMessage()
         msg['FROM'] = self.from_email
         msg['TO'] = recipient.email
-        msg['SUBJECT'] = subject
+        msg['SUBJECT'] = options.get('subject', '')
         msg.add_alternative(text, subtype='html')
 
         self.server.sendmail(
