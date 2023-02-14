@@ -45,6 +45,15 @@ services:
     volumes:
       - staticfiles:/admin_panel/staticfiles
 
+  scheduler:
+    build: ./scheduler
+    env_file:
+      - ./scheduler/.env
+    depends_on:
+      - postgresql
+      - admin
+      - api
+
   nginx:
     image: nginx:1.19.2-alpine
     volumes:
