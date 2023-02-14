@@ -15,7 +15,7 @@ class DeliveryAPIClient(object):
         """
         self.host = host
         self.port = port
-        self.admin_endpoint = '/admin/'
+        self.admin_endpoint = '/api/v1/admin/'
 
     def send(self, delivery_type, cohort, template_id, subject, priority):
         """Отправить запланированную рассылку на обработку.
@@ -35,9 +35,9 @@ class DeliveryAPIClient(object):
             'priority': priority,
             'body': {
                 'cohort': cohort,
-                'template_id': template_id,
-                'subject': subject,
+                'template_id': str(template_id),
+                'subject': subject
             },
         }
         url = f'http://{self.host}:{self.port}{self.admin_endpoint}'
-        return requests.post(url, data=body)
+        return requests.post(url, json=body)

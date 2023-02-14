@@ -1,8 +1,10 @@
 """API v1 routing."""
-from api.v1 import views
 from django.urls import path
 
+from api.v1 import views
+
 urlpatterns = [
-    path('templates/<uuid:template_id>/', views.get_template),
+    path('templates/', views.get_template),
+    path('templates/<uuid:template_id>/', views.get_template_by_id),
     path('configs/<str:config_name>/', views.get_config_value),
 ]
