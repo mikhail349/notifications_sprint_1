@@ -38,6 +38,13 @@ class Periodicity(models.TextChoices):
     monthly = 'monthly'
 
 
+class Priority(models.TextChoices):
+    """Possible choices for user priority."""
+
+    low = 'low'
+    high = 'high'
+
+
 class Template(UUIDMixin):
     """Templates for notifications."""
 
@@ -80,6 +87,10 @@ class ScheduledMailing(UUIDMixin):
     next_planned_date = models.DateTimeField(blank=True, null=True)
     periodicity = models.CharField(
         choices=Periodicity.choices,
+        max_length=50,  # noqa: WPS432
+    )
+    priority = models.CharField(
+        choices=Priority.choices,
         max_length=50,  # noqa: WPS432
     )
     created_date = models.DateTimeField(auto_now_add=True)
