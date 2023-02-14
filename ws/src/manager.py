@@ -13,13 +13,33 @@ class Manager(object):
     clients: Dict[str, WebSocket] = field(default_factory=dict)
 
     async def connect(self, username: str, ws: WebSocket) -> None:
+        """Установить соединение.
+
+        Args:
+            username: имя пользователя
+            ws: WebSocket
+
+        """
         self.clients[username] = ws
         await ws.accept()
 
     def disconnect(self, username: str) -> None:
+        """Разорвать соединение.
+
+        Args:
+            username: имя пользователя
+
+        """
         del self.clients[username]  # noqa: WPS100
 
     async def send(self, username: str, text: str) -> None:
+        """Отправить сообщение пользователю.
+
+        Args:
+            username: имя пользователя
+            text: сообщение
+
+        """
         ws = self.clients.get(username)
         if ws is not None:
             await self.clients[username].send_text(text)
