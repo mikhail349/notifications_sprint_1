@@ -8,13 +8,13 @@ from src.handlers.review import ReviewHandler
 from src.handlers.user import UserRegisteredHandler
 from src.models.message import DeliveryType, EventType, Message
 from src.senders.base import Sender
-from src.senders.websocket import WebsocketSender
 from src.services.config_storage import create_config_storage
 from src.services.data_storage import create_data_storage
 from src.services.email_sender import create_email_sender
 from src.services.notification_storage import create_notification_storage
 from src.services.templater import create_templater
 from src.services.url_shortener import create_url_shortener
+from src.services.ws_sender import create_ws_sender
 from src.storages.models.notification import Status
 
 
@@ -105,8 +105,8 @@ class Worker(object):
         await self.broker.consume(self.on_message)
 
 
-def init_handlers(worker: Worker):
-    """Инициализировать обработчиков событий.
+async def init_worker(worker: Worker):
+    """Инициализировать обработчиков событий и отправителей.
 
     Args:
         worker: Воркер
@@ -147,19 +147,14 @@ def init_handlers(worker: Worker):
         ),
     )
 
-
-def init_senders(worker: Worker):
-    """Инициализировать отправителей.
-
-    Args:
-        worker: Воркер
-
-    """
     worker.add_sender(DeliveryType.EMAIL, create_email_sender())
-    worker.add_sender(DeliveryType.WEB_SOCKET, WebsocketSender())
+    worker.add_sender(
+        DeliveryType.WEB_SOCKET,
+        await create_ws_sender(data_storage=data_storage),
+    )
 
 
-def create_worker(broker: Broker) -> Worker:
+async def create_worker(broker: Broker) -> Worker:
     """Создать воркер.
 
     Args:
@@ -170,6 +165,5 @@ def create_worker(broker: Broker) -> Worker:
 
     """
     worker = Worker(broker=broker)
-    init_handlers(worker)
-    init_senders(worker)
+    await init_worker(worker)
     return worker
