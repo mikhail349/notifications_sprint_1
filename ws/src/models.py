@@ -1,4 +1,6 @@
 """Модуль с моделями."""
+from typing import List
+
 from pydantic import BaseModel
 
 
@@ -7,4 +9,4 @@ class User(BaseModel):
 
     username: str
     is_superuser: bool
-    permissions: list[str]
+    permissions: List[str]
