@@ -45,6 +45,14 @@ class Priority(models.TextChoices):
     high = 'high'
 
 
+class Event(models.TextChoices):
+    """Possible choices for events that trigger notification."""
+
+    review_rated = 'review-reporting.v1.rated'
+    user_registered = 'user-reporting.v1.registered'
+    admin = 'admin-reporting.v1.event'
+
+
 class Template(UUIDMixin):
     """Templates for notifications."""
 
@@ -56,6 +64,10 @@ class Template(UUIDMixin):
     )
     subject = models.TextField(blank=True, null=True)
     template = HTMLField()
+    event = models.CharField(
+        choices=Event.choices,
+        max_length=50,   # noqa: WPS432
+    )
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
