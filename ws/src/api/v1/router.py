@@ -1,4 +1,6 @@
 """Модуль маршрутизатора API версии 1."""
+import asyncio
+
 from fastapi import APIRouter, Depends, WebSocket
 
 from src.api.v1.models import Message
@@ -10,7 +12,7 @@ router = APIRouter()
 
 
 @router.websocket('/send_messages')
-async def send_message(
+async def send_messages(
     websocket: WebSocket,
     manager: Manager = Depends(get_manager),
     user: User = Depends(superuser_required),
@@ -38,6 +40,9 @@ async def receive_messages(
 ):
     """Endpoint для получения сообщений.
 
+    Нужен для удержания соединения, в которое отправляется сообщение
+    через `send_messages`.
+
     Args:
         websocket: вебсокет
         manager: менеджер соединений
@@ -46,4 +51,4 @@ async def receive_messages(
     """
     async with connect(manager, user.username, websocket):
         while True:
-            await websocket.receive_text()
+            await asyncio.sleep(1)
