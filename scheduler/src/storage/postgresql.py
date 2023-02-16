@@ -53,10 +53,10 @@ class PostgresStorage(Storage):
             'ON ns.template_id = nt.id WHERE next_planned_date <= %s'
         )
         with self.conn_context() as conn:
-            curs = conn.cursor()
-            curs.execute(query, (datetime.now(),))
-            while row := curs.fetchone():
-                yield row
+            with conn.cursor() as curs:
+                curs.execute(query, (datetime.now(),))
+                while row := curs.fetchone():
+                    yield row
 
     @backoff.on_exception(wait_gen=backoff.expo, exception=Exception)
     def update_processed_notifications(
@@ -76,5 +76,5 @@ class PostgresStorage(Storage):
             'SET next_planned_date = %s WHERE id = %s'
         )
         with self.conn_context() as conn:
-            curs = conn.cursor()
-            curs.execute(query, (next_date, str(notification_id)))
+            with conn.cursor() as curs:
+                curs.execute(query, (next_date, str(notification_id)))
