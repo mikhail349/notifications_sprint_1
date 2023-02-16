@@ -35,8 +35,8 @@ class AdminPanelConfigurationStorage(ConfigStorage):
             value=url_type.value,
         )
         async with self.http_session.get(url) as res:
-            data = await res.json()
-            return data[url_type.value]
+            res_data = await res.json()
+            return res_data[url_type.value]
 
     async def get_template(
         self,
@@ -59,8 +59,8 @@ class AdminPanelConfigurationStorage(ConfigStorage):
             'delivery_type': delivery_type.value,
         }
         async with self.http_session.get(url, params=params) as res:
-            data = await res.json()
-            return data['template']
+            res_data = await res.json()
+            return res_data['template']
 
     async def get_template_by_id(self, id: uuid.UUID) -> str:
         """Получить шаблон уведомления по ID.
@@ -74,5 +74,5 @@ class AdminPanelConfigurationStorage(ConfigStorage):
         """
         url = self.templates_url + str(id)
         async with self.http_session.get(url) as res:
-            data = await res.json()
-            return data['template']
+            res_data = await res.json()
+            return res_data['template']
