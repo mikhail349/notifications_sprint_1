@@ -8,5 +8,6 @@ while ! nc -z $DB_HOST $DB_PORT; do
 done
 
 python manage.py migrate
+python manage.py createsuperuser --noinput
 python manage.py collectstatic --noinput
 uwsgi --strict --ini uwsgi.ini
