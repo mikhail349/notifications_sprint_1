@@ -1,6 +1,10 @@
 """Модуль клиента для взаимодействия с API рассылок."""
 
+import logging
+
+import backoff
 import requests
+from requests.exceptions import ConnectionError
 
 
 class DeliveryAPIClient(object):
@@ -17,6 +21,7 @@ class DeliveryAPIClient(object):
         self.port = port
         self.admin_endpoint = '/api/v1/admin/'
 
+    @backoff.on_exception(wait_gen=backoff.expo, exception=Exception)
     def send(self, delivery_type, cohort, template_id, subject, priority):
         """Отправить запланированную рассылку на обработку.
 
@@ -40,4 +45,8 @@ class DeliveryAPIClient(object):
             },
         }
         url = f'http://{self.host}:{self.port}{self.admin_endpoint}'
-        return requests.post(url, json=body)
+        try:
+            return requests.post(url, json=body)
+        except ConnectionError as err:
+            logging.error('Trying to connect {url}.'.format(url=url))
+            raise ConnectionError(err)

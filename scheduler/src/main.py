@@ -1,5 +1,6 @@
 """Основной модуль планирощика рассылок."""
 import http
+import logging
 import time
 
 from dateutil.relativedelta import relativedelta
@@ -8,6 +9,9 @@ from src.config.postgresql import PSQLSettings
 from src.delivery_api_client import DeliveryAPIClient
 from src.models.mailing import AdminEvent, Periodicity
 from src.storage.postgresql import PostgresStorage
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def get_next_date(current_planed_date, periodicity):  # noqa: WPS231
@@ -35,6 +39,7 @@ storage = PostgresStorage(PSQLSettings().dict())
 api_client = DeliveryAPIClient(**APISettings().dict())
 
 if __name__ == '__main__':
+    logger.info('Notifications scheduler is up and running')
     while True:  # noqa: WPS457
         admin_events = storage.get_pending_notifications()
 
