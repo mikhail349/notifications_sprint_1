@@ -1,6 +1,6 @@
 """Модуль имитации хранилищ."""
 import uuid
-from typing import Any
+from typing import Any, Optional
 
 from src.models.message import DeliveryType, EventType
 from src.storages import base
@@ -11,7 +11,12 @@ from src.storages.models.notification import Notification
 class MockedNotificationStorage(base.NotificationStorage):
     """Класс имитации хранилища уведомлений."""
 
+    def __init__(self) -> None:
+        """Инициализировать класс имитации хранилища уведомлений."""
+        self.last_notification: Optional[Notification] = None
+
     async def add_notification(self, notification: Notification) -> Any:
+        self.last_notification = notification
         return factory.create_random_id()
 
 
