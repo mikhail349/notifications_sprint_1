@@ -1,7 +1,7 @@
 """Модуль взаимодействия с хранилищем конфигураций в admin panel."""
 import uuid
 
-import requests
+import aiohttp
 from src.models.message import DeliveryType, EventType
 from src.storages.base import ConfigStorage, URLType
 
@@ -33,8 +33,10 @@ class AdminPanelConfigurationStorage(ConfigStorage):
             api=self.api_url,
             value=url_type.value,
         )
-        res = requests.get(url)
-        return res.json()[url_type.value]
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as res:
+                res_data = await res.json()
+                return res_data[url_type.value]
 
     async def get_template(
         self,
@@ -56,8 +58,10 @@ class AdminPanelConfigurationStorage(ConfigStorage):
             'event_type': event_type.value,
             'delivery_type': delivery_type.value,
         }
-        res = requests.get(url, params=params)
-        return res.json()['template']
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, params=params) as res:
+                res_data = await res.json()
+                return res_data['template']
 
     async def get_template_by_id(self, id: uuid.UUID) -> str:
         """Получить шаблон уведомления по ID.
@@ -70,5 +74,7 @@ class AdminPanelConfigurationStorage(ConfigStorage):
 
         """
         url = self.templates_url + str(id)
-        res = requests.get(url)
-        return res.json()['template']
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as res:
+                res_data = await res.json()
+                return res_data['template']
