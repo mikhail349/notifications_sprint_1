@@ -1,0 +1,52 @@
+@startuml as_is
+
+skinparam databaseBackgroundColor Yellow
+
+actor Администратор as Admin
+actor Клиент as Client
+actor Клиент as Client1
+actor Аналитик as Analyst
+component AdminWebApp
+component ETL
+component SearchService
+component AuthService
+component UGC_API
+component Notification_API
+component ETL as ETL1
+component Worker
+database Postgres as Postgres1
+database Postgres as Postgres2
+database ElasticSearch
+database Redis as Redis1
+database Redis as Redis2
+database Redis as Redis3
+database Kafka
+database ClickHouse
+database RabbitMQ
+database MongoDB
+
+Admin <-> AdminWebApp: администрирование\nкаталога фильмов
+AdminWebApp <-down-> Postgres1: crud\nфильмов
+Postgres1 -left-> ETL: получение\nданных
+ETL -down-> ElasticSearch: загрузка\nданных
+ETL <-left-> Redis1: read/write\nсостояния
+
+ElasticSearch -down-> SearchService: получение\nданных
+SearchService <-right-> Redis2: read/write\nкэша
+SearchService -down-> Client: получение данных\nпо фильмам
+AuthService -right-> Client: получение\nтокенов
+AuthService <-down-> Postgres2: crud\nправ, ролей
+AuthService <-up-> Redis3: read/write refresh-\nи невалидных\naccess-токенов
+Client -right-> UGC_API: передача данных о \nсобытиях
+UGC_API -down-> Kafka: сохранение\nсобытий
+Kafka -down-> ETL1: получение\nданных
+ETL1 -down-> ClickHouse: загрузка данных
+ClickHouse -down-> Analyst: анализ данных
+
+Client -down-> Notification_API: передача данных о \nсобытиях
+Notification_API -down-> RabbitMQ: постановка сообщений\nв очередь
+RabbitMQ -down-> Worker: получение сообщений\nиз очереди
+Worker -left-> Client1: отправка\nуведомлений
+Worker -down-> MongoDB: сохранение\nистории отправок
+
+@enduml
