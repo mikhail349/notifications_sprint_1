@@ -9,13 +9,14 @@ ENV UWSGI_THREADS 16
 ENV UWSGI_HARAKIRI 240
 ENV DJANGO_SETTINGS_MODULE 'config.settings'
 
+RUN apt-get update \
+     && apt install -y netcat \
+     && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt requirements.txt
 
 RUN  pip install --upgrade pip \
      && pip install -r requirements.txt --no-cache-dir
-
-RUN apt-get update \
-     && apt install -y netcat
 
 COPY --chown=www-data:www-data . .
 
