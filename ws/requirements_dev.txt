@@ -1,0 +1,2 @@
+wemake-python-styleguide==0.17.0
+mypy==1.0.0
