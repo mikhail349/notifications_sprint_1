@@ -2,6 +2,7 @@
 import uuid
 
 import aiohttp
+
 from src.models.message import DeliveryType, EventType
 from src.storages.base import ConfigStorage, URLType
 
@@ -54,12 +55,12 @@ class AdminPanelConfigurationStorage(ConfigStorage):
 
         """
         url = self.templates_url
-        params = {
+        url_params = {
             'event_type': event_type.value,
             'delivery_type': delivery_type.value,
         }
         async with aiohttp.ClientSession() as session:
-            async with session.get(url, params=params) as res:
+            async with session.get(url, params=url_params) as res:
                 res_data = await res.json()
                 return res_data['template']
 

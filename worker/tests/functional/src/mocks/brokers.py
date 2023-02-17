@@ -11,7 +11,7 @@ class MockedBroker(Broker):
     def __init__(self) -> None:
         """Инициализировать класс."""
         self.msg_callback: Optional[MsgCallback] = None
-    
+
     async def send_message(self, msg: Message):
         """Отправить сообщение.
 
