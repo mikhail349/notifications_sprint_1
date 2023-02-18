@@ -15,7 +15,7 @@ class MockedDataStorage(base.DataStorage):  # noqa: WPS214
 
     def __init__(self) -> None:
         """Инициализировать класс имитации хранилища данных."""
-        self.reviews: Dict[str, Review] = {}
+        self.reviews: Dict[uuid.UUID, Review] = {}
         self.cohorts: Dict[str, List[User]] = {}
 
     def add_review(self, review: Review):
