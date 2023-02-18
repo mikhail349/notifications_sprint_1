@@ -6,7 +6,7 @@ from src.handlers.admin import AdminHandler
 from src.handlers.review import ReviewHandler
 from src.handlers.user import UserRegisteredHandler
 from src.models.message import DeliveryType, EventType
-from src.services.worker import Worker
+from src.worker import Worker
 from src.templaters.jinja import Jinja2Templater
 from tests.functional.src.mocks import storages
 from tests.functional.src.mocks.brokers import MockedBroker

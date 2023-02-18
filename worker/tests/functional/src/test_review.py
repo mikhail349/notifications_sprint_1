@@ -4,9 +4,9 @@ from typing import Dict
 import pytest
 
 from src.models.message import DeliveryType, EventType, Message
-from src.services.worker import Worker
 from src.storages.models.notification import Status
 from src.storages.models.review import Review
+from src.worker import Worker
 from tests.functional.src.assertions import assert_response
 from tests.functional.src.mocks import constants
 from tests.functional.src.mocks.brokers import MockedBroker
