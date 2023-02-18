@@ -1,6 +1,4 @@
 """Вспомогательный модуль для проверки тестов."""
-from typing import Optional
-
 from src.storages.models.notification import Status
 from tests.functional.src.mocks.senders import MockedEmailSender
 from tests.functional.src.mocks.storages import MockedNotificationStorage
@@ -10,7 +8,7 @@ def assert_response(
     email_sender: MockedEmailSender,
     notification_storage: MockedNotificationStorage,
     expected_status: Status,
-    successful_recipient_username: Optional[str] = None,
+    successful_recipient_username: str,
 ):
     """Проверить результат обработки воркера.
 
