@@ -50,5 +50,5 @@ async def test_user_registered(  # noqa: WPS211
         email_sender=email_sender,
         notification_storage=notification_storage,
         expected_status=expected_status,
-        successful_recipient_username=input_body.get('username'),
+        successful_recipient_username=input_body.get('username', ''),
     )
