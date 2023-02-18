@@ -1,14 +1,13 @@
 """Модуль тестов событий пользователя."""
-import uuid
 from typing import Dict
 
 import pytest
 
 from src.models.message import DeliveryType, EventType, Message
 from src.services.worker import Worker
-from src.storages.mock import MockedDataStorage
 from src.storages.models.notification import Status
-from src.storages.models.factory import create_review
+from tests.functional.src.assertions import assert_response
+from tests.functional.src.mocks import constants
 from tests.functional.src.mocks.brokers import MockedBroker
 from tests.functional.src.mocks.senders import MockedEmailSender
 from tests.functional.src.mocks.storages import MockedNotificationStorage
@@ -18,7 +17,7 @@ from tests.functional.src.mocks.storages import MockedNotificationStorage
 @pytest.mark.parametrize(
     'input_body, expected_status',
     [
-        ({'username': 'ivan325'}, Status.SUCCESS),
+        ({'username': constants.USERNAME}, Status.SUCCESS),
         ({}, Status.ERROR),
     ],
 )
@@ -47,13 +46,9 @@ async def test_user_registered(  # noqa: WPS211
         body=input_body,
     )
     await broker.send_message(msg)
-
-    notification = notification_storage.last_notification
-    assert notification is not None and notification.status == expected_status
-
-    if notification.status == Status.SUCCESS:
-        recipient = email_sender.last_recipient
-        assert (
-            recipient is not None
-            and recipient.username == input_body.get('username')
-        )
+    assert_response(
+        email_sender=email_sender,
+        notification_storage=notification_storage,
+        expected_status=expected_status,
+        successful_recipient_username=input_body.get('username'),
+    )

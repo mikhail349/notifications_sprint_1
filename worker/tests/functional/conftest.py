@@ -2,20 +2,25 @@
 import pytest
 import pytest_asyncio
 
-from src.handlers.user import UserRegisteredHandler
+from src.handlers.admin import AdminHandler
 from src.handlers.review import ReviewHandler
+from src.handlers.user import UserRegisteredHandler
 from src.models.message import DeliveryType, EventType
 from src.services.worker import Worker
-from src.storages.mock import MockedDataStorage
 from src.templaters.jinja import Jinja2Templater
 from tests.functional.src.mocks import storages
 from tests.functional.src.mocks.brokers import MockedBroker
 from tests.functional.src.mocks.senders import MockedEmailSender
 from tests.functional.src.mocks.url_shorteners import MockedURLShortener
 
+pytest_plugins = (
+    'tests.functional.fixtures.objects',
+    'tests.functional.fixtures.storages',
+)
+
 
 @pytest.fixture
-def broker():
+def broker() -> MockedBroker:
     """Фикстура брокера.
 
     Returns:
@@ -26,7 +31,7 @@ def broker():
 
 
 @pytest.fixture
-def email_sender():
+def email_sender() -> MockedEmailSender:
     """Фикстура отправителя email.
 
     Returns:
@@ -36,33 +41,25 @@ def email_sender():
     return MockedEmailSender()
 
 
-@pytest.fixture
-def notification_storage():
-    """Фикстура хранилища уведомлений.
-
-    Returns:
-        MockedNotificationStorage: класс хранилища уведомлений.
-
-    """
-    return storages.MockedNotificationStorage()
-
-
-@pytest.fixture
-def data_storage():
-    return MockedDataStorage()
-
-
 @pytest_asyncio.fixture
-async def worker(broker, email_sender, notification_storage, data_storage):
+async def worker(
+    broker: MockedBroker,
+    email_sender: MockedEmailSender,
+    notification_storage: storages.MockedNotificationStorage,
+    data_storage: storages.MockedDataStorage,
+    config_storage: storages.MockedConfigStorage,
+) -> Worker:
     """Фикстура воркера.
 
     Args:
         broker: фикстура брокера
         email_sender: фикстура отправителя email
         notification_storage: фикстура хранилища уведомлений
+        data_storage: фикстура хранилища данных
+        config_storage: фикстура хранилища настроек
 
-    Yields:
-        worker
+    Returns:
+        Worker: воркер
 
     """
     worker = Worker(broker=broker)
@@ -72,7 +69,7 @@ async def worker(broker, email_sender, notification_storage, data_storage):
         UserRegisteredHandler(
             data_storage=data_storage,
             notification_storage=notification_storage,
-            config_storage=storages.MockedConfigStorage(),
+            config_storage=config_storage,
             templater=Jinja2Templater(),
             url_shortener=MockedURLShortener(),
         ),
@@ -80,11 +77,20 @@ async def worker(broker, email_sender, notification_storage, data_storage):
     worker.add_handler(
         EventType.REVIEW_RATED,
         ReviewHandler(
-            data_storage=MockedDataStorage(),
+            data_storage=data_storage,
             notification_storage=notification_storage,
-            config_storage=storages.MockedConfigStorage(),
+            config_storage=config_storage,
+            templater=Jinja2Templater(),
+        ),
+    )
+    worker.add_handler(
+        EventType.ADMIN,
+        AdminHandler(
+            data_storage=data_storage,
+            notification_storage=notification_storage,
+            config_storage=config_storage,
             templater=Jinja2Templater(),
         ),
     )
     await worker.run()
-    yield worker
+    return worker
