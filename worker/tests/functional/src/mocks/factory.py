@@ -68,18 +68,22 @@ def create_movie() -> Movie:
     )
 
 
-def create_review(id: uuid.UUID) -> Review:  # noqa: WPS125
-    """Создать радомную рецензи.
+def create_review(
+    id: uuid.UUID,
+    author_username: str,
+) -> Review:
+    """Создать рецензию.
 
     Args:
         id: ИД рецензии
+        author_username: имя пользователя автора
 
     Returns:
         Review: рецензия
 
     """
     movie = create_movie()
-    author = create_user()
+    author = create_user(username=author_username)
     return Review(
         id=id,
         movie=movie,
